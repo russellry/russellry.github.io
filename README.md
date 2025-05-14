@@ -1,6 +1,6 @@
 # Russell Ong - Personal Portfolio Website
 
-This repository contains the source code for my personal portfolio website, hosted on GitHub Pages at [russellong.github.io](https://russellong.github.io) (replace `russellong` with your actual GitHub username if different).
+This repository contains the source code for my personal portfolio website, hosted on GitHub Pages at [russellry.github.io](https://russellry.github.io/) (replace `russellry` with your actual GitHub username if different).
 
 ## About This Project
 
@@ -13,8 +13,7 @@ The portfolio highlights the following apps:
 
 ## Live Site
 
-🌐 **View the live portfolio:** [https://russellong.github.io](https://russellong.github.io)
-(Remember to replace `russellong` with your actual GitHub username if it's different, e.g., `https://russellry.github.io`)
+🌐 **View the live portfolio:** [https://russellry.github.io](https://russellry.github.io)
 
 ## Features
 
@@ -31,9 +30,6 @@ The portfolio highlights the following apps:
 * **JavaScript:** For minor enhancements like dynamically setting the current year in the footer.
 * **GitHub Pages:** For hosting the static website.
 
-## File Structure
-
-├── index.html         // Main portfolio homepage├── privacy.html       // Privacy policy page├── assets/            // Folder containing all images (icons, screenshots)│   ├── treasure-life-logo.webp│   ├── treasure-life-screenshot-1.webp│   ├── riskm-logo.webp│   ├── riskm-screenshot-1.webp│   ├── tomorrow-logo.webp│   ├── tomorrow-screenshot-1.webp│   └── ... (other images)└── README.md          // This file
 ## How to Use/Modify
 
 1.  **Clone the repository (optional, for local development):**
