@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support – Russell Ong Apps</title>
+    <!-- Tailwind CDN build for quick prototyping; swap with your own production build for launch -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+            color: #d1d5db;           /* text-gray-300 */
+        }
+        .support-content-container {
+            background-color: #1f2937; /* bg-gray-800 */
+            border: 1px solid #374151; /* border-gray-700 */
+        }
+        .support-content h1, .support-content h2 {
+            color: #f3f4f6; /* text-gray-100 */
+        }
+        .support-content h1 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700;   /* font-bold */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.75rem; /* pb-3 */
+            border-bottom: 1px solid #374151; /* border-gray-700 */
+        }
+        .support-content h2 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600;  /* font-semibold */
+            margin-top: 2.5rem; /* mt-10 */
+            margin-bottom: 1rem; /* mb-4 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 1px solid #374151; /* border-gray-700 */
+        }
+        .support-content p, .support-content ul {
+            margin-bottom: 1.25rem; /* mb-5 */
+            line-height: 1.75;
+            color: #9ca3af; /* text-gray-400 */
+        }
+        .support-content ul {
+            list-style-position: outside;
+            padding-left: 1.25rem; /* pl-5 */
+        }
+        .support-content li {
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .support-content a {
+            color: #60a5fa; /* text-blue-400 */
+            text-decoration: underline;
+            transition: color 0.2s ease-in-out;
+        }
+        .support-content a:hover {
+            color: #93c5fd; /* text-blue-300 */
+        }
+        .support-content strong {
+            color: #e5e7eb; /* text-gray-200 */
+            font-weight: 500; /* font-medium */
+        }
+        .last-updated-text {
+            color: #6b7280; /* text-gray-500 */
+            font-size: 0.875rem; /* text-sm */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Hero / Banner -->
+    <header class="py-10 md:py-16">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-100">Support</h1>
+            <p class="mt-3 text-lg text-gray-400">Need help? I'm here for you.</p>
+        </div>
+    </header>
+
+    <main class="pb-16 md:pb-24">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <div class="support-content-container p-6 sm:p-8 md:p-12 rounded-xl shadow-2xl">
+                <div class="support-content">
+                    <p class="last-updated-text"><strong>Last Updated:</strong> <span id="lastUpdatedDate">May 21, 2025</span></p>
+
+                    <!-- Contact Section -->
+                    <h2>How to Reach Me</h2>
+                    <p>For any questions, issues, or feedback regarding my apps, please email me directly at:</p>
+                    <p class="text-center my-8">
+                        <a href="mailto:russellongdev@gmail.com" class="inline-block bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-500 transition-colors duration-300">russellongdev@gmail.com</a>
+                    </p>
+                    <p class="text-sm text-center text-gray-500 mb-10">Singapore Time (UTC+08:00) — I usually respond <strong>when I can...</strong>.</p>
+
+                    <!-- Before You Email -->
+                    <h2>Before You Email</h2>
+                    <p>To help me assist you as quickly as possible, please include (where relevant):</p>
+                    <ul>
+                        <li><strong>App name & version</strong> (see settings → about)</li>
+                        <li><strong>Device model & iOS version</strong></li>
+                        <li><strong>Steps to reproduce</strong> the issue (screenshots or screen‑recordings are gold ✨)</li>
+                        <li>Your <strong>App Store purchase receipt</strong> (for billing/refund questions)</li>
+                    </ul>
+
+                    <!-- FAQ -->
+                    <h2>Frequently Asked Questions</h2>
+                    <p class="mb-2"><strong>🛠 Bug Reports</strong><br/>I love squashing bugs. Send the steps and I'll aim to patch them in the next update.</p>
+                    <p class="mb-2"><strong>💳 Billing & Subscriptions</strong><br/>All payments are handled securely by Apple. For refunds, start with <a href="https://support.apple.com/en-us/HT204084" target="_blank" rel="noopener noreferrer">Apple's refund request page</a>. If you get stuck, email me and I'll guide you.</p>
+                    <p class="mb-2"><strong>🔐 Privacy Questions</strong><br/>See the <a href="privacy.html">Privacy Policy</a>. Still unsure? Drop me a line.</p>
+                    <p class="mb-2"><strong>🌟 Feature Requests</strong><br/>I'm always collecting ideas. Tell me why the feature matters to you (use‑case, pain point) and it'll go straight to the roadmap.</p>
+
+                    <!-- Troubleshooting Tips -->
+                    <h2>Quick Troubleshooting</h2>
+                    <ul>
+                        <li>Force‑quit & relaunch the app.</li>
+                        <li>Ensure you’re on the <strong>latest version</strong> from the App Store.</li>
+                        <li>Restart your device to clear cached issues.</li>
+                        <li>Still broken? Email me with the details above.</li>
+                    </ul>
+
+                    <!-- Legal -->
+                    <h2>Legal & Policies</h2>
+                    <p>
+                        Your use of my apps is governed by their respective End‑User License Agreements (EULAs) and the <a href="privacy.html">Privacy Policy</a>. By emailing me, you agree to share the information you provide for the sole purpose of resolving your support request.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-10 md:py-16 border-t border-gray-800">
+        <div class="container mx-auto px-6 text-gray-500">
+            <p>&copy; <span id="currentYearFooter"></span> Russell Ong. All rights reserved.</p>
+            <p class="mt-2">
+                <a href="index.html" class="hover:text-blue-400 underline">Back to Portfolio</a> &middot; <a href="privacy.html" class="hover:text-blue-400 underline">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Dynamic Year & Date -->
+    <script>
+        // Set current year in footer
+        document.getElementById("currentYearFooter").textContent = new Date().getFullYear();
+        // Set last updated date to today
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById("lastUpdatedDate").textContent = today.toLocaleDateString('en-US', options);
+    </script>
+</body>
+</html>
