@@ -43,7 +43,28 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text; /* Standard property */
-            text-fill-color: transparent; /* Standard property */
+        }
+        .dot-container {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.25rem;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 9999px;
+            background-color: #4b5563; /* gray-700 */
+            border: 1px solid #6b7280; /* gray-600 */
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .dot:hover {
+            background-color: #9ca3af; /* gray-400 */
+            transform: scale(1.05);
+        }
+        .dot.active {
+            background-color: #60a5fa; /* blue-400 */
+            border-color: #93c5fd; /* blue-300 */
         }
     </style>
 </head>
@@ -80,7 +101,8 @@
                     <p class="text-gray-400 mb-5 text-sm leading-relaxed flex-grow">
                         An intuitive app designed to help you capture, organize, and cherish life's most precious moments and memories.
                     </p>
-                    <img src="assets/treasure-life-screenshot-1.webp" alt="Treasure Life Screenshot 1" class="screenshot-custom mb-6" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'h-[200px] w-full bg-gray-700 flex items-center justify-center text-gray-500 rounded-md\'>Screenshot Err</div>'">
+                    <img id="treasure-life-shot" src="assets/treasure-life-screenshot-1.webp" alt="Treasure Life Screenshot 1" class="screenshot-custom mb-4" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'h-[200px] w-full bg-gray-700 flex items-center justify-center text-gray-500 rounded-md\'>Screenshot Err</div>'">
+                    <div class="dot-container" data-app="treasure-life"></div>
                     <a href="https://apps.apple.com/us/app/treasure-life/id6741671694" target="_blank" class="mt-auto w-full text-center bg-blue-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-500 transition-colors duration-300">
                         View on App Store
                     </a>
@@ -97,7 +119,8 @@
                     <p class="text-gray-400 mb-5 text-sm leading-relaxed flex-grow">
                         Take control of your trading decisions. RiskM simplifies calculating share purchases based on your capital, risk percentage, and trade parameters.
                     </p>
-                    <img src="assets/riskm-screenshot-1.webp" alt="RiskM Screenshot 1" class="screenshot-custom mb-6" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'h-[200px] w-full bg-gray-700 flex items-center justify-center text-gray-500 rounded-md\'>Screenshot Err</div>'">
+                    <img id="riskm-shot" src="assets/riskm-screenshot-1.webp" alt="RiskM Screenshot 1" class="screenshot-custom mb-4" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'h-[200px] w-full bg-gray-700 flex items-center justify-center text-gray-500 rounded-md\'>Screenshot Err</div>'">
+                    <div class="dot-container" data-app="riskm"></div>
                     <a href="https://apps.apple.com/us/app/riskm-manage-trading-risk/id6737332775" target="_blank" class="mt-auto w-full text-center bg-blue-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-500 transition-colors duration-300">
                         View on App Store
                     </a>
@@ -114,8 +137,27 @@
                     <p class="text-gray-400 mb-5 text-sm leading-relaxed flex-grow">
                         A fresh approach to task management. Get a new list each day to power through your tasks and focus on what's most important.
                     </p>
-                    <img src="assets/tomorrow-screenshot-1.webp" alt="Tomorrow Screenshot 1" class="screenshot-custom mb-6" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'h-[200px] w-full bg-gray-700 flex items-center justify-center text-gray-500 rounded-md\'>Screenshot Err</div>'">
+                    <img id="tomorrow-shot" src="assets/tomorrow-screenshot-1.webp" alt="Tomorrow Screenshot 1" class="screenshot-custom mb-4" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'h-[200px] w-full bg-gray-700 flex items-center justify-center text-gray-500 rounded-md\'>Screenshot Err</div>'">
+                    <div class="dot-container" data-app="tomorrow"></div>
                     <a href="https://apps.apple.com/us/app/tomorrow-optimized-to-do-list/id1533441215" target="_blank" class="mt-auto w-full text-center bg-blue-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-500 transition-colors duration-300">
+                        View on App Store
+                    </a>
+                </div>
+
+                <div class="app-card rounded-xl p-6 flex flex-col">
+                    <div class="flex items-center mb-5">
+                        <img src="assets/persona-logo.webp" alt="Persona App Icon" class="app-icon-custom mr-5 flex-shrink-0" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'w-[80px] h-[80px] bg-gray-700 flex items-center justify-center text-gray-500 text-xs rounded-[20%]\'>Icon Err</div>'">
+                        <div>
+                            <h3 class="text-2xl font-semibold text-gray-100">Persona</h3>
+                            <p class="text-sm text-gray-500 -mt-1">MBTI Growth Mastery</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-5 text-sm leading-relaxed flex-grow">
+                        Personality tracker and growth companion built on the MBTI framework—take the quiz, track moods, and follow daily micro-transformations tailored to your type.
+                    </p>
+                    <img id="persona-shot" src="assets/persona-screenshot-1.webp" alt="Persona Screenshot 1" class="screenshot-custom mb-4" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'h-[200px] w-full bg-gray-700 flex items-center justify-center text-gray-500 rounded-md\'>Screenshot Err</div>'">
+                    <div class="dot-container" data-app="persona"></div>
+                    <a href="https://apps.apple.com/us/app/persona-mbti-growth-mastery/id6745158056" target="_blank" class="mt-auto w-full text-center bg-blue-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-500 transition-colors duration-300">
                         View on App Store
                     </a>
                 </div>
@@ -136,6 +178,61 @@
     <script>
         // Set current year in footer
         document.getElementById("currentYear").textContent = new Date().getFullYear();
+
+        // Simple screenshot carousel for each app
+        const screenshotMap = {
+            "treasure-life": [
+                { src: "assets/treasure-life-screenshot-1.webp", alt: "Treasure Life Screenshot 1" },
+                { src: "assets/treasure-life-screenshot-2.webp", alt: "Treasure Life Screenshot 2" },
+                { src: "assets/treasure-life-screenshot-3.webp", alt: "Treasure Life Screenshot 3" },
+                { src: "assets/treasure-life-screenshot-4.webp", alt: "Treasure Life Screenshot 4" }
+            ],
+            "riskm": [
+                { src: "assets/riskm-screenshot-1.webp", alt: "RiskM Screenshot 1" },
+                { src: "assets/riskm-screenshot-2.webp", alt: "RiskM Screenshot 2" },
+                { src: "assets/riskm-screenshot-3.webp", alt: "RiskM Screenshot 3" },
+                { src: "assets/riskm-screenshot-4.webp", alt: "RiskM Screenshot 4" }
+            ],
+            "tomorrow": [
+                { src: "assets/tomorrow-screenshot-1.webp", alt: "Tomorrow Screenshot 1" },
+                { src: "assets/tomorrow-screenshot-2.webp", alt: "Tomorrow Screenshot 2" },
+                { src: "assets/tomorrow-screenshot-3.webp", alt: "Tomorrow Screenshot 3" }
+            ],
+            "persona": [
+                { src: "assets/persona-screenshot-1.webp", alt: "Persona Screenshot 1" },
+                { src: "assets/persona-screenshot-2.webp", alt: "Persona Screenshot 2" },
+                { src: "assets/persona-screenshot-3.webp", alt: "Persona Screenshot 3" },
+                { src: "assets/persona-screenshot-4.webp", alt: "Persona Screenshot 4" },
+                { src: "assets/persona-screenshot-5.webp", alt: "Persona Screenshot 5" },
+                { src: "assets/persona-screenshot-6.webp", alt: "Persona Screenshot 6" }
+            ]
+        };
+
+        function initCarousel(appKey, imgId) {
+            const shots = screenshotMap[appKey];
+            const imgEl = document.getElementById(imgId);
+            const dotContainer = document.querySelector(`.dot-container[data-app="${appKey}"]`);
+            if (!shots || !imgEl || !dotContainer) return;
+
+            dotContainer.innerHTML = "";
+            shots.forEach((shot, idx) => {
+                const dot = document.createElement("button");
+                dot.className = "dot" + (idx === 0 ? " active" : "");
+                dot.setAttribute("aria-label", `Show screenshot ${idx + 1}`);
+                dot.addEventListener("click", () => {
+                    imgEl.src = shot.src;
+                    imgEl.alt = shot.alt;
+                    dotContainer.querySelectorAll(".dot").forEach(d => d.classList.remove("active"));
+                    dot.classList.add("active");
+                });
+                dotContainer.appendChild(dot);
+            });
+        }
+
+        initCarousel("treasure-life", "treasure-life-shot");
+        initCarousel("riskm", "riskm-shot");
+        initCarousel("tomorrow", "tomorrow-shot");
+        initCarousel("persona", "persona-shot");
     </script>
 
 </body>
