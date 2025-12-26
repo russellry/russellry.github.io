@@ -162,6 +162,24 @@
                     </a>
                 </div>
 
+                <div class="app-card rounded-xl p-6 flex flex-col">
+                    <div class="flex items-center mb-5">
+                        <img src="assets/contactsweeper-logo.webp" alt="ContactSweeper App Icon" class="app-icon-custom mr-5 flex-shrink-0" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'w-[80px] h-[80px] bg-gray-700 flex items-center justify-center text-gray-500 text-xs rounded-[20%]\'>Icon Err</div>'">
+                        <div>
+                            <h3 class="text-2xl font-semibold text-gray-100">ContactSweeper</h3>
+                            <p class="text-sm text-gray-500 -mt-1">Clean & Merge</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-5 text-sm leading-relaxed flex-grow">
+                        Clean and organize your contacts in minutes with swipe actions and backups. Dedupe contacts, merge safely, and keep your address book spotless—all on-device for your privacy.
+                    </p>
+                    <img id="contactsweeper-shot" src="assets/contactsweeper-screenshot-1.webp" alt="ContactSweeper Screenshot 1" class="screenshot-custom mb-4" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\'h-[200px] w-full bg-gray-700 flex items-center justify-center text-gray-500 rounded-md\'>Screenshot Err</div>'">
+                    <div class="dot-container" data-app="contactsweeper"></div>
+                    <a href="https://apps.apple.com/us/app/contactsweeper-clean-merge/id6749838639" target="_blank" class="mt-auto w-full text-center bg-blue-600 text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-500 transition-colors duration-300">
+                        View on App Store
+                    </a>
+                </div>
+
             </div>
         </div>
     </section>
@@ -205,6 +223,12 @@
                 { src: "assets/persona-screenshot-4.webp", alt: "Persona Screenshot 4" },
                 { src: "assets/persona-screenshot-5.webp", alt: "Persona Screenshot 5" },
                 { src: "assets/persona-screenshot-6.webp", alt: "Persona Screenshot 6" }
+            ],
+            "contactsweeper": [
+                { src: "assets/contactsweeper-screenshot-1.webp", alt: "ContactSweeper Screenshot 1" },
+                { src: "assets/contactsweeper-screenshot-2.webp", alt: "ContactSweeper Screenshot 2" },
+                { src: "assets/contactsweeper-screenshot-3.webp", alt: "ContactSweeper Screenshot 3" },
+                { src: "assets/contactsweeper-screenshot-4.webp", alt: "ContactSweeper Screenshot 4" }
             ]
         };
 
@@ -233,6 +257,7 @@
         initCarousel("riskm", "riskm-shot");
         initCarousel("tomorrow", "tomorrow-shot");
         initCarousel("persona", "persona-shot");
+        initCarousel("contactsweeper", "contactsweeper-shot");
     </script>
 
 </body>
