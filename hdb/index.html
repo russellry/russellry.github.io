@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HDB to MRT Walking Distance Map</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        #sidebar {
+            width: 320px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Mobile Menu Button */
+        #mobile-menu-btn {
+            position: absolute;
+            /* Float above map */
+            top: 15px;
+            left: 15px;
+            z-index: 1500;
+            /* Above map controls */
+            background: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none;
+            /* Hidden on desktop */
+        }
+
+        #close-sidebar-btn {
+            display: none;
+            /* Hidden on desktop */
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            #mobile-menu-btn {
+                display: block;
+            }
+
+            #sidebar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 85%;
+                max-width: 320px;
+                transform: translateX(-100%);
+                /* Hide off-screen */
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+                /* Slide in */
+            }
+
+            #close-sidebar-btn {
+                display: block;
+            }
+
+            .leaflet-control-zoom {
+                margin-top: 60px !important;
+                /* Make room for menu button */
+            }
+        }
+
+        .sidebar-header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: #2c3e50;
+        }
+
+        .sidebar-controls {
+            padding: 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .control-group {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        /* Duration Slider */
+        .slider-container {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input[type=range] {
+            width: 100%;
+        }
+
+        #mrt-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        /* Line Groups */
+        .line-group {
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .line-header {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Line Colors */
+        .line-EW {
+            background-color: #009645;
+        }
+
+        .line-NS {
+            background-color: #d42e12;
+        }
+
+        .line-NE {
+            background-color: #8f419c;
+        }
+
+        .line-CC {
+            background-color: #fa9e0d;
+            color: #333;
+        }
+
+        .line-CE {
+            background-color: #fa9e0d;
+            color: #333;
+        }
+
+        .line-DT {
+            background-color: #005ec4;
+        }
+
+        .line-TE {
+            background-color: #9d5b25;
+        }
+
+        .line-CG {
+            background-color: #009645;
+        }
+
+        .line-BP {
+            background-color: #748477;
+        }
+
+        .line-SK {
+            background-color: #748477;
+        }
+
+        .line-PG {
+            background-color: #748477;
+        }
+
+        .line-SW {
+            background-color: #748477;
+        }
+
+        .line-SE {
+            background-color: #748477;
+        }
+
+        .line-PW {
+            background-color: #748477;
+        }
+
+        .line-PE {
+            background-color: #748477;
+        }
+
+        .line-JS {
+            background-color: #009586;
+        }
+
+        .line-JE {
+            background-color: #009586;
+        }
+
+        .line-JW {
+            background-color: #009586;
+        }
+
+        .line-CR {
+            background-color: #97C616;
+        }
+
+        .line-CP {
+            background-color: #97C616;
+        }
+
+        .line-Other {
+            background-color: #666;
+        }
+
+        .station-list {
+            display: none;
+            /* Hidden by default */
+        }
+
+        .station-list.expanded {
+            display: block;
+        }
+
+        .station-item {
+            padding: 8px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .station-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .station-item.active {
+            background-color: #e3f2fd;
+            font-weight: 500;
+            color: #1565c0;
+        }
+
+        .station-code {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            background: #eee;
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+
+        #map {
+            flex-grow: 1;
+            height: 100%;
+        }
+
+        /* Map Controls Overrides */
+        .legend {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
+            font-size: 12px;
+        }
+
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        /* Loading Overlay */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading">
+        <div class="spinner"></div>
+        <p>Loading walking distance data...</p>
+    </div>
+
+    <button id="mobile-menu-btn" onclick="toggleSidebar()">☰ Filters</button>
+
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h1>HDB-MRT Visualizer</h1>
+            <button id="close-sidebar-btn" onclick="toggleSidebar()">×</button>
+        </div>
+
+        <div class="sidebar-controls">
+            <div class="control-group">
+                <input type="checkbox" id="toggleHDB" checked>
+                <label for="toggleHDB">Show HDBs</label>
+            </div>
+            <div class="control-group">
+                <input type="checkbox" id="toggleExits" checked>
+                <label for="toggleExits">Show MRT Exits</label>
+            </div>
+            <div class="control-group">
+                <input type="checkbox" id="toggleLines" checked>
+                <label for="toggleLines">Show Connections</label>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+            <!-- Year Built Filter -->
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Year Built: <span id="yearValue">2006 - 2026</span></span>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span style="font-size: 0.8rem; color: #666;">Min</span>
+                    <input type="range" id="minYearSlider" min="2006" max="2026" value="2006" step="1"
+                        style="flex-grow: 1;">
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+                    <span style="font-size: 0.8rem; color: #666;">Max</span>
+                    <input type="range" id="maxYearSlider" min="2006" max="2026" value="2026" step="1"
+                        style="flex-grow: 1;">
+                </div>
+            </div>
+
+
+
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Max Walk Time</span>
+                    <span id="durationValue">20+ min</span>
+                </div>
+                <input type="range" id="durationSlider" min="1" max="21" value="21" step="1">
+            </div>
+
+            <input type="text" id="stationSearch" class="search-box" placeholder="Filter stations...">
+            <button onclick="resetFilter()"
+                style="margin-top: 5px; width: 100%; padding: 6px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 4px;">Reset
+                Map Filter</button>
+        </div>
+
+        <div id="mrt-list">
+            <!-- MRT Lines will be populated here -->
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // Initialize map centered on Singapore
+        const map = L.map('map').setView([1.3521, 103.8198], 12);
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        const hdbLayer = L.layerGroup().addTo(map);
+        const exitLayer = L.layerGroup().addTo(map);
+        const lineLayer = L.layerGroup().addTo(map);
+
+        // Custom icons
+        const mrtIcon = L.divIcon({
+            html: '<div style="background-color: #d32f2f; border-radius: 50%; width: 12px; height: 12px; border: 2px solid white;"></div>',
+            className: 'custom-mrt-icon',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        });
+
+        // Store data globally
+        let allBlocks = [];
+        let masterStationMap = {}; // From mrt_stations_updated.json
+        let activeFilterStation = null; // Currently selected station
+
+        const lineColors = {
+            'EW': '#009645', 'CG': '#009645',
+            'NS': '#d42e12',
+            'NE': '#8f419c',
+            'CC': '#fa9e0d', 'CE': '#fa9e0d',
+            'DT': '#005ec4',
+            'TE': '#9d5b25',
+            'BP': '#748477',
+            'SK': '#748477', 'SW': '#748477', 'SE': '#748477',
+            'PG': '#748477', 'PW': '#748477', 'PE': '#748477',
+            'JS': '#009586', 'JE': '#009586', 'JW': '#009586', // JRL (Turquoise)
+            'CR': '#97C616', 'CP': '#97C616' // CRL (Bright Green)
+        };
+
+        const lineNames = {
+            'NS': 'North-South Line',
+            'EW': 'East-West Line',
+            'CG': 'Changi Airport Branch',
+            'NE': 'North-East Line',
+            'CC': 'Circle Line',
+            'CE': 'Circle Extension',
+            'DT': 'Downtown Line',
+            'TE': 'Thomson-East Coast Line',
+            'BP': 'Bukit Panjang LRT',
+            'SK': 'Sengkang LRT', 'SW': 'Sengkang LRT', 'SE': 'Sengkang LRT',
+            'PG': 'Punggol LRT', 'PW': 'Punggol LRT', 'PE': 'Punggol LRT',
+            'JS': 'Jurong Region Line',
+            'JE': 'Jurong Region Line',
+            'JW': 'Jurong Region Line',
+            'CR': 'Cross Island Line',
+            'CP': 'Cross Island Line'
+        };
+
+        // Manual mapping for future stations lacking codes in current dataset
+        const manualStationMap = {
+            "BUKIT BATOK WEST": "JS2",
+            "ENTERPRISE": "JS9",
+            "GEK POH": "JW1",
+            "NANYANG GATEWAY": "JW3",
+            "TENGAH PARK": "JE2",
+            "JURONG HILL": "JS11",
+            "JURONG PIER": "JS12",
+            "JURONG TOWN HALL": "JE6",
+            "NANYANG CRESCENT": "JW4",
+            "PANDAN RESERVOIR": "JE7",
+            "PENG KANG HILL": "JW5",
+            "TAWAS": "JW2",
+            "TENGAH PLANTATION": "JE1",
+            "TOH GUAN": "JE4",
+            "TUKANG": "JS10",
+            "BAHAR JUNCTION": "JS7",
+            "BOON LAY": "JS8",
+            "CHOP CHUA": "JS3",
+            "CORPORATION": "JS5",
+            "HONG KAH": "JS4",
+            "JURONG WEST": "JS6",
+            // Add any missing TEL ones if needed
+            "MARINA SOUTH": "TE21",
+            "GARDENS BY THE BAY": "TE22",
+            "TANJONG RHU": "TE23",
+            "KATONG PARK": "TE24",
+            "TANJONG KATONG": "TE25",
+            "MARINE PARADE": "TE26",
+            "MARINE TERRACE": "TE27",
+            "SIGLAP": "TE28",
+            "BAYSHORE": "TE29",
+            "BEDOK SOUTH": "TE30",
+            "SUNGEI BEDOK": "TE31",
+            // Typo Fixes & Linkways
+            "CITY HALL/ESPLANADE": "NS25", // Link to City Hall
+            "YEE TEE": "NS5", // Typo for Yew Tee
+            "CLARK QUAY": "NE5", // Typo for Clarke Quay
+            "PROMMENADE": "CC4", // Typo for Promenade
+            "JLG: CG MRT TOL LINKWAY": "EW25", // Likely Chinese Garden / Jurong Lake Gardens link
+            // Depots (Map to nearest line color or hide?)
+            // We map to a valid code so they appear under the Line Group at least
+            "KIM CHUAN UNDERGROUND MRT DEPOT": "CC11", // Near Tai Seng
+            "TUAS MRT DEPOT": "EW33" // Near Tuas Link
+        };
+
+        function getColor(time) {
+            return time < 5 ? '#4caf50' : // < 5 mins
+                time < 10 ? '#8bc34a' : // < 10 mins
+                    time < 15 ? '#ffc107' : // < 15 mins
+                        time < 20 ? '#ff9800' : // < 20 mins
+                            '#f44336';  // > 20 mins
+        }
+
+        // --- Data Loading & Processing ---
+
+        function normalizeStationName(rawName) {
+            // Remove "MRT STATION", "LRT STATION"
+            // Remove "EXIT A", "EXIT 1", etc.
+            let name = rawName.toUpperCase();
+            name = name.replace(/ (MRT|LRT) STATION.*/, '');
+            // Also handle cases where MRT STATION is not present but EXIT is (just in case)
+            name = name.replace(/ EXIT [A-Za-z0-9]+$/, '');
+            return name.trim();
+        }
+
+        async function loadData() {
+            try {
+                // 1. Load Master MRT Data to build the station map (Station Name -> Lines)
+                const mrtResponse = await fetch('data/onemap/mrt_stations_updated.json');
+                const mrtData = await mrtResponse.json();
+                const mrtList = Array.isArray(mrtData) ? mrtData : mrtData.data;
+
+                // Build Master Map: Name -> { codes: Set(['NS1', 'EW24']), lat, lon }
+                mrtList.forEach(station => {
+                    // Extract code like (NS1) or (NS1 / EW24)
+                    const namePart = station.name.split('(')[0].trim();
+                    // normalize again to be safe
+                    const cleanName = normalizeStationName(namePart);
+
+                    if (!masterStationMap[cleanName]) {
+                        masterStationMap[cleanName] = {
+                            name: cleanName,
+                            codes: new Set(),
+                            lines: new Set()
+                        };
+                    }
+
+                    // Extract codes from parenthesis like (NS27 / TE20)
+                    const matches = station.name.match(/\(([A-Z0-9\s\/]+)\)/);
+                    if (matches) {
+                        const codes = matches[1].split('/').map(c => c.trim());
+                        codes.forEach(code => {
+                            masterStationMap[cleanName].codes.add(code);
+                            // Extract line prefix (NS, EW, etc.)
+                            const prefix = code.replace(/[^A-Z]/g, '');
+                            if (prefix) masterStationMap[cleanName].lines.add(prefix);
+                        });
+                    }
+
+                    // CHECK MANUAL MAP IF NO CODES FOUND
+                    if (masterStationMap[cleanName].codes.size === 0 && manualStationMap[cleanName]) {
+                        const code = manualStationMap[cleanName];
+                        masterStationMap[cleanName].codes.add(code);
+                        const prefix = code.replace(/[^A-Z]/g, '');
+                        if (prefix) masterStationMap[cleanName].lines.add(prefix);
+                    }
+                });
+
+                // 2. Load Walking Distance Data
+                const hdbResponse = await fetch('data/hdb_mrt_walking_distance_full.json?t=' + new Date().getTime());
+                const hdbData = await hdbResponse.json();
+                allBlocks = hdbData.data || [];
+
+                console.log(`Loaded ${allBlocks.length} HDB blocks`);
+                document.getElementById('loading').style.display = 'none';
+
+                // 3. Render Initial Map
+                updateMapDisplay();
+
+                // 4. Render Sidebar (passing the HDB data to filter)
+                renderSidebar(allBlocks);
+
+            } catch (err) {
+                console.error("Error loading data:", err);
+                document.getElementById('loading').innerHTML = "<p>Error loading data. Is server running?</p>";
+            }
+        }
+
+        // --- Sidebar Rendering ---
+
+        function renderSidebar(hdbBlocks) {
+            const container = document.getElementById('mrt-list');
+            container.innerHTML = '';
+
+            // Identify which stations actually have HDBs
+            const validStations = new Set();
+            if (hdbBlocks) {
+                hdbBlocks.forEach(block => {
+                    if (block.nearby_mrts && block.nearby_mrts.length > 0) {
+                        // Add all nearby MRTs (or just the nearest? User said "MRTs with HDBs")
+                        // Let's add all that are listed as "nearby"
+                        block.nearby_mrts.forEach(mrt => {
+                            validStations.add(normalizeStationName(mrt.name));
+                        });
+                    }
+                });
+            }
+            console.log("Valid Stations with HDBs:", validStations.size);
+
+            // Organize by Line
+            const lineGroups = {};
+            const linePriority = ['NS', 'EW', 'NE', 'CC', 'DT', 'TE', 'BP', 'SK', 'SW', 'SE', 'PG', 'PW', 'PE', 'JS', 'JE', 'JW', 'CR', 'CP'];
+
+            // Iterate over all known stations
+            Object.values(masterStationMap).forEach(station => {
+                // FILTER: Only include if this station has HDBs
+                if (!validStations.has(station.name)) return;
+
+                // Determine which lines this station belongs to
+                // If it's an interchange, add it to ALL relevant line groups
+
+                if (station.lines.size === 0) {
+                    // Fallback for weird data, put in Other
+                    if (!lineGroups['Other']) lineGroups['Other'] = [];
+                    lineGroups['Other'].push(station);
+                    console.log("Uncategorized Station (Other):", station.name);
+                } else {
+                    station.lines.forEach(line => {
+                        // MERGE REQUEST: Remap 'CE' -> 'CC', 'CG' -> 'EW', 'JE/JW' -> 'JS'
+                        let groupLine = line;
+                        if (groupLine === 'CE') groupLine = 'CC';
+                        if (groupLine === 'CG') groupLine = 'EW';
+                        if (groupLine === 'JE' || groupLine === 'JW') groupLine = 'JS';
+
+                        if (!lineGroups[groupLine]) lineGroups[groupLine] = [];
+
+                        // Avoid duplicate entries if a station is technically labeled (CC x / CE y) 
+                        // though usually they are distinct codes
+                        if (!lineGroups[groupLine].includes(station)) {
+                            lineGroups[groupLine].push(station);
+                        }
+                    });
+                }
+            });
+
+            // Sort lines
+            const sortedLines = Object.keys(lineGroups).sort((a, b) => {
+                const idxA = linePriority.indexOf(a);
+                const idxB = linePriority.indexOf(b);
+                if (idxA === -1 && idxB === -1) return a.localeCompare(b);
+                if (idxA === -1) return 1;
+                if (idxB === -1) return -1;
+                return idxA - idxB;
+            });
+
+            sortedLines.forEach(lineCode => {
+                const stations = lineGroups[lineCode];
+                if (stations.length === 0) return;
+
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'line-group';
+
+                const header = document.createElement('div');
+                header.className = `line-header line-${lineCode}`;
+                header.innerHTML = `<span>${lineNames[lineCode] || lineCode}</span> <span>${stations.length}</span>`;
+
+                const listDiv = document.createElement('div');
+                listDiv.className = 'station-list';
+
+                // Sort stations alphabetically
+                stations.sort((a, b) => a.name.localeCompare(b.name));
+
+                stations.forEach(station => {
+                    const item = document.createElement('div');
+                    item.className = 'station-item';
+                    const codesStr = Array.from(station.codes).join(' / ');
+
+                    // Highlight logic
+                    if (activeFilterStation && activeFilterStation === station.name) {
+                        item.classList.add('active');
+                    }
+
+                    item.innerHTML = `
+                        <span>${station.name}</span>
+                        ${codesStr ? `<span class="station-code">${codesStr}</span>` : ''}
+                    `;
+                    item.onclick = () => filterByStation(station.name);
+                    listDiv.appendChild(item);
+                });
+
+                header.onclick = () => {
+                    listDiv.classList.toggle('expanded');
+                };
+
+                groupDiv.appendChild(header);
+                groupDiv.appendChild(listDiv);
+                container.appendChild(groupDiv);
+            });
+        }
+
+        function filterByStation(stationName) {
+            activeFilterStation = stationName;
+
+            // Re-render sidebar to show active state
+            // (A bit inefficient to full re-render but fast enough for this DOM size)
+            // Or just manually toggle classes
+            document.querySelectorAll('.station-item').forEach(el => {
+                const nameSpan = el.querySelector('span:first-child');
+                if (nameSpan && nameSpan.innerText === stationName) {
+                    el.classList.add('active');
+                    // Ensure parent list is expanded
+                    el.parentElement.classList.add('expanded');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            updateMapDisplay();
+        }
+
+        function resetFilter() {
+            activeFilterStation = null;
+            document.querySelectorAll('.station-item').forEach(el => el.classList.remove('active'));
+            // Reset search
+            document.getElementById('stationSearch').value = '';
+            document.querySelectorAll('.station-item').forEach(el => el.style.display = 'flex');
+
+            updateMapDisplay();
+            map.setView([1.3521, 103.8198], 12);
+        }
+
+        function updateMapDisplay() {
+            hdbLayer.clearLayers();
+            exitLayer.clearLayers();
+            lineLayer.clearLayers();
+
+            const maxDuration = parseInt(document.getElementById('durationSlider').value);
+            const minYear = parseInt(document.getElementById('minYearSlider').value);
+            const maxYear = parseInt(document.getElementById('maxYearSlider').value);
+
+            let bounds = L.latLngBounds();
+            let hasVisibleBlocks = false;
+
+            allBlocks.forEach(block => {
+                if (!block.coordinates || !block.coordinates.lat) return;
+
+                // 1. Duration Filter (Global)
+                let duration = 999;
+                let nearest = null;
+                if (block.nearby_mrts && block.nearby_mrts.length > 0) {
+                    nearest = block.nearby_mrts[0];
+                    duration = Math.ceil(nearest.distance_meters / 80);
+                }
+
+                if (maxDuration < 21 && duration > maxDuration) return;
+
+                // 2. Year Built Filter
+                const year = block.year_completed || 0;
+                if (year < minYear || year > maxYear) return;
+
+                // 3. Station Filter (if active)
+                if (activeFilterStation) {
+                    const matchesStation = block.nearby_mrts && block.nearby_mrts.some(mrt => {
+                        const mrtName = normalizeStationName(mrt.name);
+                        return mrtName === activeFilterStation || mrtName.includes(activeFilterStation);
+                    });
+
+                    if (!matchesStation) return;
+                }
+
+                // If passed filters, add to map
+                addBlockToMap(block, nearest, duration);
+                bounds.extend([block.coordinates.lat, block.coordinates.lon]);
+                hasVisibleBlocks = true;
+            });
+
+            if (hasVisibleBlocks && activeFilterStation) {
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        function addBlockToMap(block, nearest, duration) {
+            const lat = block.coordinates.lat;
+            const lon = block.coordinates.lon;
+            const address = block.address || `${block.blk_no} ${block.street}`;
+
+            let popupContent = `<b>${address}</b><br>`;
+            let circleColor = '#999'; // Default grey for no MRT or far away
+
+            if (nearest) {
+                // Determine color based on recalculated duration
+                let displayDuration = Math.ceil(nearest.distance_meters / 80);
+
+                circleColor = getColor(displayDuration);
+                popupContent += `Nearest: ${nearest.name}<br>`;
+                popupContent += `Walking: ${nearest.distance_meters}m (~${displayDuration} min)<br>`;
+                popupContent += `Year: ${block.year_completed || 'N/A'}`;
+
+                // Add connection line & Exit marker
+                if (nearest.coordinates && nearest.coordinates.lat) {
+                    const line = L.polyline(
+                        [[lat, lon], [nearest.coordinates.lat, nearest.coordinates.lon]],
+                        { color: circleColor, weight: 2, opacity: 0.6, dashArray: '5, 10' }
+                    );
+                    lineLayer.addLayer(line);
+
+                    const exitMarker = L.marker([nearest.coordinates.lat, nearest.coordinates.lon], { icon: mrtIcon });
+                    exitMarker.bindPopup(`<b>${nearest.name}</b><br>${nearest.address}`);
+                    exitLayer.addLayer(exitMarker);
+                }
+            } else {
+                popupContent += "No nearby MRT within range.";
+            }
+
+            const marker = L.circleMarker([lat, lon], {
+                radius: 8,
+                fillColor: circleColor,
+                color: '#fff',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            });
+
+            marker.bindPopup(popupContent);
+            hdbLayer.addLayer(marker);
+        }
+
+        // --- Event Listeners ---
+
+        // Slider
+        const slider = document.getElementById('durationSlider');
+        const valLabel = document.getElementById('durationValue');
+        slider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            valLabel.innerText = val >= 21 ? "20+ min" : `< ${val} min`;
+            updateMapDisplay();
+        });
+
+        // Year Sliders
+        const minYearSlider = document.getElementById('minYearSlider');
+        const maxYearSlider = document.getElementById('maxYearSlider');
+        const yearLabel = document.getElementById('yearValue');
+
+        function updateYearLabel() {
+            let min = parseInt(minYearSlider.value);
+            let max = parseInt(maxYearSlider.value);
+
+            // Prevent crossover validity if desired, or just let user swap them mentally (but simpler to enforce min <= max)
+            if (min > max) {
+                // simple swap for logic, but for UI feedback might be jarring. 
+                // Let's just display as is.
+            }
+            yearLabel.innerText = `${min} - ${max}`;
+            updateMapDisplay();
+        }
+
+        minYearSlider.addEventListener('input', updateYearLabel);
+        maxYearSlider.addEventListener('input', updateYearLabel);
+
+        // Unit Checkboxes
+        document.querySelectorAll('.unit-filter').forEach(cb => {
+            cb.addEventListener('change', updateMapDisplay);
+        });
+
+        // Search
+        document.getElementById('stationSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.station-item').forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            document.querySelectorAll('.station-list').forEach(list => {
+                if (term) list.classList.add('expanded');
+                else list.classList.remove('expanded');
+            });
+        });
+
+        // Layer Toggles
+        document.getElementById('toggleHDB').addEventListener('change', e => {
+            if (e.target.checked) map.addLayer(hdbLayer); else map.removeLayer(hdbLayer);
+        });
+        document.getElementById('toggleExits').addEventListener('change', e => {
+            if (e.target.checked) map.addLayer(exitLayer); else map.removeLayer(exitLayer);
+        });
+        document.getElementById('toggleLines').addEventListener('change', e => {
+            if (e.target.checked) map.addLayer(lineLayer); else map.removeLayer(lineLayer);
+        });
+
+        // Add Legend
+        const legend = L.control({ position: 'bottomright' });
+        legend.onAdd = function (map) {
+            const div = L.DomUtil.create('div', 'legend');
+            const grades = [0, 5, 10, 15, 20];
+            const labels = ['< 5 min', '5-10 min', '10-15 min', '15-20 min', '> 20 min'];
+            div.innerHTML += '<b>Walking Duration</b><br>';
+            for (let i = 0; i < grades.length; i++) {
+                div.innerHTML += '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' + labels[i] + '<br>';
+            }
+            return div;
+        };
+        legend.addTo(map);
+
+        // Mobile Sidebar Toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            // If opening, force map resize check after transition
+            setTimeout(() => { map.invalidateSize(); }, 350);
+        }
+
+        // Close sidebar when clicking on map (mobile only)
+        map.on('click', () => {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        });
+
+        // Start
+        loadData();
+    </script>
+</body>
+
+</html>
