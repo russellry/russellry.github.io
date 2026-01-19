@@ -1,0 +1,130 @@
+/* Apple-inspired Custom CSS */
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #a8a8a8;
+}
+
+/* Dark Mode Scrollbar Overrides */
+.dark ::-webkit-scrollbar-thumb {
+    background-color: #4a4a4a;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background-color: #6e6e6e;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass {
+    background: rgba(29, 29, 31, 0.7);
+    /* Apple Dark Gray w/ opacity */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Subtle Noise Background (Optional Premium Feel) */
+.bg-noise {
+    position: relative;
+}
+
+.bg-noise::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    /* refined noise */
+    .bg-noise::before {
+        opacity: 0.04;
+        /* Slightly more visible texture */
+    }
+
+    /* Scroll Reveal Utilities */
+
+    /* Scroll Reveal Utilities */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Stagger Delays */
+    .delay-100 {
+        transition-delay: 0.1s;
+    }
+
+    .delay-200 {
+        transition-delay: 0.2s;
+    }
+
+    .delay-300 {
+        transition-delay: 0.3s;
+    }
+
+    /* Enhanced Hover Effects */
+    .hover-lift {
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+    }
+
+    .dark .hover-lift:hover {
+        box-shadow: 0 10px 30px -10px rgba(255, 255, 255, 0.05);
+    }
+
+    /* Carousel Snap */
+    .carousel-snap {
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+    }
+
+    .carousel-item {
+        scroll-snap-align: center;
+    }
+
+    /* Hide Scrollbar in Carousel */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
