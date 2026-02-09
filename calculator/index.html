@@ -1,0 +1,710 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alkaff Block Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <style>
+        .highlight-chart {
+            border: 4px solid #F59E0B; /* Amber-500 */
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans pb-20">
+    <div class="max-w-7xl mx-auto space-y-10 pt-10 px-4">
+        
+        <div class="text-center">
+            <h1 class="text-4xl font-bold text-gray-900">Alkaff Block Breakdown</h1>
+            <p class="text-gray-600 mt-2 text-lg">Floor Level (Y) vs. Price (X)</p>
+            
+            <!-- Controls Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 max-w-5xl mx-auto">
+                
+                <!-- Filter Panel -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Visualization Filters</h3>
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-wrap gap-4 text-sm text-gray-500 justify-center">
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-green-500"></span> Low PSF</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-red-500"></span> High PSF</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full border border-gray-400"></span> Bubble Size = Sqft</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-2">
+                            <label class="font-semibold text-gray-700 text-sm">Time Period:</label>
+                            <input type="month" id="startDate" value="2025-01" min="2025-01" max="2026-01" class="border rounded px-2 py-1 text-sm">
+                            <span class="text-gray-400">to</span>
+                            <input type="month" id="endDate" value="2026-01" min="2025-01" max="2026-01" class="border rounded px-2 py-1 text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculator Panel -->
+                <div class="bg-indigo-50 p-6 rounded-lg shadow-sm border border-indigo-100">
+                    <h3 class="font-bold text-indigo-700 mb-4 border-b border-indigo-200 pb-2">Valuation Calculator</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Block</label>
+                            <select id="calcBlock" class="w-full border rounded px-2 py-1 text-sm bg-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Flat Type</label>
+                            <select id="calcType" class="w-full border rounded px-2 py-1 text-sm bg-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Price (SGD)</label>
+                            <input type="number" id="calcPrice" placeholder="e.g. 1000000" class="w-full border rounded px-2 py-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Floor Level</label>
+                            <input type="number" id="calcFloor" placeholder="e.g. 15" class="w-full border rounded px-2 py-1 text-sm">
+                        </div>
+                        <div class="col-span-2">
+                             <label class="block text-xs font-semibold text-gray-600">Area (Sqft)</label>
+                             <input type="number" id="calcSqft" placeholder="e.g. 1001" class="w-full border rounded px-2 py-1 text-sm">
+                        </div>
+                    </div>
+                    <button onclick="calculateValuation()" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm">
+                        Analyze Value
+                    </button>
+                    <div id="calcResult" class="mt-3 text-center text-sm font-semibold hidden p-2 rounded"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="border-b-4 border-red-500 pb-2">
+                <h2 class="text-3xl font-bold text-gray-800">Alkaff Courtview</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+                <div class="bg-white p-5 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 chart-card" id="card_101A" data-block="101A">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-700">Block 101A</h3>
+                            <p class="text-indigo-600 font-semibold text-sm mt-1">4 ROOM: +$4,770/floor</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500"><span id="count_101A">8</span> Transactions</p>
+                            <p class="font-bold text-gray-800" id="avg_101A">Avg: $1,130,750</p>
+                        </div>
+                    </div>
+                    <div class="relative h-96">
+                        <canvas id="chart_101A"></canvas>
+                    </div>
+                    <script>
+                        (function() {
+                            const ctx = document.getElementById('chart_101A');
+                            const chart = new Chart(ctx, {
+                                type: 'scatter',
+                                data: { datasets: [{"label": "4 ROOM", "data": [{"y": 17.0, "x": 1160000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1158.791727865355, "lease": "94 years 08 months", "raw_floor": "16 TO 18", "_color": "rgba(158, 96, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1100000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1098.8542246999054, "lease": "94 years 08 months", "raw_floor": "10 TO 12", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1168000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1166.7833949540814, "lease": "94 years 08 months", "raw_floor": "13 TO 15", "_color": "rgba(165, 89, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1140000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1138.8125601435383, "lease": "94 years 07 months", "raw_floor": "13 TO 15", "_color": "rgba(143, 111, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1130000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1128.8229762826302, "lease": "94 years 07 months", "raw_floor": "07 TO 09", "_color": "rgba(135, 119, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1125000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1123.828184352176, "lease": "94 years 07 months", "raw_floor": "13 TO 15", "_color": "rgba(131, 123, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1085000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1083.8698489085432, "lease": "94 years 07 months", "raw_floor": "04 TO 06", "_color": "rgba(99, 155, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1138000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1136.8146433713566, "lease": "94 years 07 months", "raw_floor": "07 TO 09", "_color": "rgba(141, 113, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(158, 96, 0, 0.7)", "rgba(111, 143, 0, 0.7)", "rgba(165, 89, 0, 0.7)", "rgba(143, 111, 0, 0.7)", "rgba(135, 119, 0, 0.7)", "rgba(131, 123, 0, 0.7)", "rgba(99, 155, 0, 0.7)", "rgba(141, 113, 0, 0.7)"], "pointRadius": [5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1100339.8058252428, "y": 5.0}, {"x": 1157582.5242718447, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}] },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            title: { display: true, text: 'Floor Level' },
+                                            min: 0, max: 20,
+                                            ticks: { stepSize: 2 }
+                                        },
+                                        x: {
+                                            title: { display: true, text: 'Price (SGD)' },
+                                            ticks: { callback: (v) => '$' + v.toLocaleString() }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: { position: 'bottom' },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: (ctx) => {
+                                                    if (ctx.dataset.type === 'line') return ctx.dataset.label;
+                                                    const pt = ctx.raw;
+                                                    return [
+                                                        `${pt.model} (${pt.sqft} sqft) | ${pt.raw_floor}`,
+                                                        `Price: $${pt.x.toLocaleString()}`,
+                                                        `PSF: $${Math.round(pt.psf).toLocaleString()} psf`,
+                                                        `Lease: ${pt.lease}`,
+                                                        `Date: ${pt.date}`
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            // Store original data for filtering
+                            chart._originalDatasets = JSON.parse(JSON.stringify([{"label": "4 ROOM", "data": [{"y": 17.0, "x": 1160000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1158.791727865355, "lease": "94 years 08 months", "raw_floor": "16 TO 18", "_color": "rgba(158, 96, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1100000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1098.8542246999054, "lease": "94 years 08 months", "raw_floor": "10 TO 12", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1168000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1166.7833949540814, "lease": "94 years 08 months", "raw_floor": "13 TO 15", "_color": "rgba(165, 89, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1140000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1138.8125601435383, "lease": "94 years 07 months", "raw_floor": "13 TO 15", "_color": "rgba(143, 111, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1130000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1128.8229762826302, "lease": "94 years 07 months", "raw_floor": "07 TO 09", "_color": "rgba(135, 119, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1125000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1123.828184352176, "lease": "94 years 07 months", "raw_floor": "13 TO 15", "_color": "rgba(131, 123, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1085000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1083.8698489085432, "lease": "94 years 07 months", "raw_floor": "04 TO 06", "_color": "rgba(99, 155, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1138000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1136.8146433713566, "lease": "94 years 07 months", "raw_floor": "07 TO 09", "_color": "rgba(141, 113, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(158, 96, 0, 0.7)", "rgba(111, 143, 0, 0.7)", "rgba(165, 89, 0, 0.7)", "rgba(143, 111, 0, 0.7)", "rgba(135, 119, 0, 0.7)", "rgba(131, 123, 0, 0.7)", "rgba(99, 155, 0, 0.7)", "rgba(141, 113, 0, 0.7)"], "pointRadius": [5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1100339.8058252428, "y": 5.0}, {"x": 1157582.5242718447, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}]));
+                            window.charts = window.charts || [];
+                            window.charts.push({
+                                id: '101A',
+                                instance: chart
+                            });
+                        })();
+                    </script>
+                </div>
+            
+                <div class="bg-white p-5 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 chart-card" id="card_102A" data-block="102A">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-700">Block 102A</h3>
+                            <p class="text-indigo-600 font-semibold text-sm mt-1">4 ROOM: +$12,388/floor</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500"><span id="count_102A">25</span> Transactions</p>
+                            <p class="font-bold text-gray-800" id="avg_102A">Avg: $1,124,507</p>
+                        </div>
+                    </div>
+                    <div class="relative h-96">
+                        <canvas id="chart_102A"></canvas>
+                    </div>
+                    <script>
+                        (function() {
+                            const ctx = document.getElementById('chart_102A');
+                            const chart = new Chart(ctx, {
+                                type: 'scatter',
+                                data: { datasets: [{"label": "4 ROOM", "data": [{"y": 17.0, "x": 1248800.0, "model": "Model A", "date": "2025-04", "sqft": 1044, "psf": 1196.0559652285615, "lease": "95 years 03 months", "raw_floor": "16 TO 18", "_color": "rgba(188, 66, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 17.0, "x": 1180000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1178.7708955871713, "lease": "95 years 02 months", "raw_floor": "16 TO 18", "_color": "rgba(174, 80, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1100000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1098.8542246999054, "lease": "95 years 02 months", "raw_floor": "13 TO 15", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1120000.0, "model": "Model A", "date": "2025-05", "sqft": 1044, "psf": 1072.695932940414, "lease": "95 years 02 months", "raw_floor": "04 TO 06", "_color": "rgba(90, 164, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 11.0, "x": 1100000.0, "model": "Model A", "date": "2025-05", "sqft": 1044, "psf": 1053.5406484236207, "lease": "95 years 01 month", "raw_floor": "10 TO 12", "_color": "rgba(75, 179, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 5.0, "x": 1078000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1076.8771402059074, "lease": "95 years", "raw_floor": "04 TO 06", "_color": "rgba(93, 161, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1150000.0, "model": "Model A", "date": "2025-06", "sqft": 1044, "psf": 1101.4288597156035, "lease": "95 years 01 month", "raw_floor": "10 TO 12", "_color": "rgba(113, 141, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 11.0, "x": 1200000.0, "model": "Model A", "date": "2025-07", "sqft": 1044, "psf": 1149.3170710075863, "lease": "95 years", "raw_floor": "10 TO 12", "_color": "rgba(151, 103, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 14.0, "x": 1140000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1138.8125601435383, "lease": "95 years", "raw_floor": "13 TO 15", "_color": "rgba(143, 111, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1051990.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1050.894232583685, "lease": "94 years 11 months", "raw_floor": "04 TO 06", "_color": "rgba(73, 181, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1100000.0, "model": "Model A", "date": "2025-08", "sqft": 1001, "psf": 1098.8542246999054, "lease": "94 years 11 months", "raw_floor": "04 TO 06", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1120000.0, "model": "Model A", "date": "2025-08", "sqft": 1001, "psf": 1118.833392421722, "lease": "94 years 11 months", "raw_floor": "13 TO 15", "_color": "rgba(127, 127, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1038000.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 994.1592664215622, "lease": "94 years 11 months", "raw_floor": "04 TO 06", "_color": "rgba(27, 227, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1168000.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 1118.6686157807173, "lease": "94 years 11 months", "raw_floor": "07 TO 09", "_color": "rgba(127, 127, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1200000.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 1149.3170710075863, "lease": "94 years 11 months", "raw_floor": "07 TO 09", "_color": "rgba(151, 103, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1150000.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 1101.4288597156035, "lease": "94 years 10 months", "raw_floor": "07 TO 09", "_color": "rgba(113, 141, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1130000.0, "model": "Model A", "date": "2025-08", "sqft": 1001, "psf": 1128.8229762826302, "lease": "94 years 10 months", "raw_floor": "07 TO 09", "_color": "rgba(135, 119, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1058000.0, "model": "Model A", "date": "2025-09", "sqft": 1044, "psf": 1013.3145509383553, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(43, 211, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 5.0, "x": 1040000.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1038.916721534456, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(63, 191, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1190000.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1188.7604794480794, "lease": "94 years 09 months", "raw_floor": "13 TO 15", "_color": "rgba(182, 72, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1243888.0, "model": "Model A", "date": "2025-10", "sqft": 1044, "psf": 1191.3514273512371, "lease": "94 years 09 months", "raw_floor": "13 TO 15", "_color": "rgba(184, 70, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1150000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1148.8021440044465, "lease": "94 years 08 months", "raw_floor": "07 TO 09", "_color": "rgba(150, 104, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 2.0, "x": 988000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 986.9708854577333, "lease": "94 years 07 months", "raw_floor": "01 TO 03", "_color": "rgba(22, 232, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1200000.0, "model": "Model A", "date": "2026-01", "sqft": 1044, "psf": 1149.3170710075863, "lease": "94 years 06 months", "raw_floor": "13 TO 15", "_color": "rgba(151, 103, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 2.0, "x": 968000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 966.9917177359168, "lease": "94 years 05 months", "raw_floor": "01 TO 03", "_color": "rgba(6, 248, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(188, 66, 0, 0.7)", "rgba(174, 80, 0, 0.7)", "rgba(111, 143, 0, 0.7)", "rgba(90, 164, 0, 0.7)", "rgba(75, 179, 0, 0.7)", "rgba(93, 161, 0, 0.7)", "rgba(113, 141, 0, 0.7)", "rgba(151, 103, 0, 0.7)", "rgba(143, 111, 0, 0.7)", "rgba(73, 181, 0, 0.7)", "rgba(111, 143, 0, 0.7)", "rgba(127, 127, 0, 0.7)", "rgba(27, 227, 0, 0.7)", "rgba(127, 127, 0, 0.7)", "rgba(151, 103, 0, 0.7)", "rgba(113, 141, 0, 0.7)", "rgba(135, 119, 0, 0.7)", "rgba(43, 211, 0, 0.7)", "rgba(63, 191, 0, 0.7)", "rgba(182, 72, 0, 0.7)", "rgba(184, 70, 0, 0.7)", "rgba(150, 104, 0, 0.7)", "rgba(22, 232, 0, 0.7)", "rgba(151, 103, 0, 0.7)", "rgba(6, 248, 0, 0.7)"], "pointRadius": [6.602457499999997, 5.526067499999999, 5.526067499999999, 6.602457499999997, 6.602457499999997, 5.526067499999999, 6.602457499999997, 6.602457499999997, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 6.602457499999997, 6.602457499999997, 6.602457499999997, 6.602457499999997, 5.526067499999999, 6.602457499999997, 5.526067499999999, 5.526067499999999, 6.602457499999997, 5.526067499999999, 5.526067499999999, 6.602457499999997, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1035316.4857142858, "y": 2.0}, {"x": 1221130.3071428572, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}] },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            title: { display: true, text: 'Floor Level' },
+                                            min: 0, max: 20,
+                                            ticks: { stepSize: 2 }
+                                        },
+                                        x: {
+                                            title: { display: true, text: 'Price (SGD)' },
+                                            ticks: { callback: (v) => '$' + v.toLocaleString() }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: { position: 'bottom' },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: (ctx) => {
+                                                    if (ctx.dataset.type === 'line') return ctx.dataset.label;
+                                                    const pt = ctx.raw;
+                                                    return [
+                                                        `${pt.model} (${pt.sqft} sqft) | ${pt.raw_floor}`,
+                                                        `Price: $${pt.x.toLocaleString()}`,
+                                                        `PSF: $${Math.round(pt.psf).toLocaleString()} psf`,
+                                                        `Lease: ${pt.lease}`,
+                                                        `Date: ${pt.date}`
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            // Store original data for filtering
+                            chart._originalDatasets = JSON.parse(JSON.stringify([{"label": "4 ROOM", "data": [{"y": 17.0, "x": 1248800.0, "model": "Model A", "date": "2025-04", "sqft": 1044, "psf": 1196.0559652285615, "lease": "95 years 03 months", "raw_floor": "16 TO 18", "_color": "rgba(188, 66, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 17.0, "x": 1180000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1178.7708955871713, "lease": "95 years 02 months", "raw_floor": "16 TO 18", "_color": "rgba(174, 80, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1100000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1098.8542246999054, "lease": "95 years 02 months", "raw_floor": "13 TO 15", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1120000.0, "model": "Model A", "date": "2025-05", "sqft": 1044, "psf": 1072.695932940414, "lease": "95 years 02 months", "raw_floor": "04 TO 06", "_color": "rgba(90, 164, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 11.0, "x": 1100000.0, "model": "Model A", "date": "2025-05", "sqft": 1044, "psf": 1053.5406484236207, "lease": "95 years 01 month", "raw_floor": "10 TO 12", "_color": "rgba(75, 179, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 5.0, "x": 1078000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1076.8771402059074, "lease": "95 years", "raw_floor": "04 TO 06", "_color": "rgba(93, 161, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1150000.0, "model": "Model A", "date": "2025-06", "sqft": 1044, "psf": 1101.4288597156035, "lease": "95 years 01 month", "raw_floor": "10 TO 12", "_color": "rgba(113, 141, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 11.0, "x": 1200000.0, "model": "Model A", "date": "2025-07", "sqft": 1044, "psf": 1149.3170710075863, "lease": "95 years", "raw_floor": "10 TO 12", "_color": "rgba(151, 103, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 14.0, "x": 1140000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1138.8125601435383, "lease": "95 years", "raw_floor": "13 TO 15", "_color": "rgba(143, 111, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1051990.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1050.894232583685, "lease": "94 years 11 months", "raw_floor": "04 TO 06", "_color": "rgba(73, 181, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1100000.0, "model": "Model A", "date": "2025-08", "sqft": 1001, "psf": 1098.8542246999054, "lease": "94 years 11 months", "raw_floor": "04 TO 06", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1120000.0, "model": "Model A", "date": "2025-08", "sqft": 1001, "psf": 1118.833392421722, "lease": "94 years 11 months", "raw_floor": "13 TO 15", "_color": "rgba(127, 127, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1038000.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 994.1592664215622, "lease": "94 years 11 months", "raw_floor": "04 TO 06", "_color": "rgba(27, 227, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1168000.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 1118.6686157807173, "lease": "94 years 11 months", "raw_floor": "07 TO 09", "_color": "rgba(127, 127, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1200000.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 1149.3170710075863, "lease": "94 years 11 months", "raw_floor": "07 TO 09", "_color": "rgba(151, 103, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1150000.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 1101.4288597156035, "lease": "94 years 10 months", "raw_floor": "07 TO 09", "_color": "rgba(113, 141, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1130000.0, "model": "Model A", "date": "2025-08", "sqft": 1001, "psf": 1128.8229762826302, "lease": "94 years 10 months", "raw_floor": "07 TO 09", "_color": "rgba(135, 119, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1058000.0, "model": "Model A", "date": "2025-09", "sqft": 1044, "psf": 1013.3145509383553, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(43, 211, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 5.0, "x": 1040000.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1038.916721534456, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(63, 191, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1190000.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1188.7604794480794, "lease": "94 years 09 months", "raw_floor": "13 TO 15", "_color": "rgba(182, 72, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1243888.0, "model": "Model A", "date": "2025-10", "sqft": 1044, "psf": 1191.3514273512371, "lease": "94 years 09 months", "raw_floor": "13 TO 15", "_color": "rgba(184, 70, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1150000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1148.8021440044465, "lease": "94 years 08 months", "raw_floor": "07 TO 09", "_color": "rgba(150, 104, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 2.0, "x": 988000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 986.9708854577333, "lease": "94 years 07 months", "raw_floor": "01 TO 03", "_color": "rgba(22, 232, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1200000.0, "model": "Model A", "date": "2026-01", "sqft": 1044, "psf": 1149.3170710075863, "lease": "94 years 06 months", "raw_floor": "13 TO 15", "_color": "rgba(151, 103, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 2.0, "x": 968000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 966.9917177359168, "lease": "94 years 05 months", "raw_floor": "01 TO 03", "_color": "rgba(6, 248, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(188, 66, 0, 0.7)", "rgba(174, 80, 0, 0.7)", "rgba(111, 143, 0, 0.7)", "rgba(90, 164, 0, 0.7)", "rgba(75, 179, 0, 0.7)", "rgba(93, 161, 0, 0.7)", "rgba(113, 141, 0, 0.7)", "rgba(151, 103, 0, 0.7)", "rgba(143, 111, 0, 0.7)", "rgba(73, 181, 0, 0.7)", "rgba(111, 143, 0, 0.7)", "rgba(127, 127, 0, 0.7)", "rgba(27, 227, 0, 0.7)", "rgba(127, 127, 0, 0.7)", "rgba(151, 103, 0, 0.7)", "rgba(113, 141, 0, 0.7)", "rgba(135, 119, 0, 0.7)", "rgba(43, 211, 0, 0.7)", "rgba(63, 191, 0, 0.7)", "rgba(182, 72, 0, 0.7)", "rgba(184, 70, 0, 0.7)", "rgba(150, 104, 0, 0.7)", "rgba(22, 232, 0, 0.7)", "rgba(151, 103, 0, 0.7)", "rgba(6, 248, 0, 0.7)"], "pointRadius": [6.602457499999997, 5.526067499999999, 5.526067499999999, 6.602457499999997, 6.602457499999997, 5.526067499999999, 6.602457499999997, 6.602457499999997, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 6.602457499999997, 6.602457499999997, 6.602457499999997, 6.602457499999997, 5.526067499999999, 6.602457499999997, 5.526067499999999, 5.526067499999999, 6.602457499999997, 5.526067499999999, 5.526067499999999, 6.602457499999997, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1035316.4857142858, "y": 2.0}, {"x": 1221130.3071428572, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}]));
+                            window.charts = window.charts || [];
+                            window.charts.push({
+                                id: '102A',
+                                instance: chart
+                            });
+                        })();
+                    </script>
+                </div>
+            
+                <div class="bg-white p-5 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 chart-card" id="card_102B" data-block="102B">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-700">Block 102B</h3>
+                            <p class="text-indigo-600 font-semibold text-sm mt-1">4 ROOM: +$3,611/floor</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500"><span id="count_102B">18</span> Transactions</p>
+                            <p class="font-bold text-gray-800" id="avg_102B">Avg: $1,099,583</p>
+                        </div>
+                    </div>
+                    <div class="relative h-96">
+                        <canvas id="chart_102B"></canvas>
+                    </div>
+                    <script>
+                        (function() {
+                            const ctx = document.getElementById('chart_102B');
+                            const chart = new Chart(ctx, {
+                                type: 'scatter',
+                                data: { datasets: [{"label": "4 ROOM", "data": [{"y": 8.0, "x": 1135888.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1134.7048432599329, "lease": "95 years 01 month", "raw_floor": "07 TO 09", "_color": "rgba(139, 115, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1075000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1073.8802650476348, "lease": "95 years 01 month", "raw_floor": "10 TO 12", "_color": "rgba(91, 163, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 17.0, "x": 1105000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1103.8490166303595, "lease": "95 years 01 month", "raw_floor": "16 TO 18", "_color": "rgba(115, 139, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1059000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1057.8969308701817, "lease": "95 years 01 month", "raw_floor": "04 TO 06", "_color": "rgba(78, 176, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1150000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1148.8021440044465, "lease": "95 years", "raw_floor": "10 TO 12", "_color": "rgba(150, 104, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1070000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1068.8854731171807, "lease": "95 years", "raw_floor": "07 TO 09", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1058000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1056.8979724840908, "lease": "95 years", "raw_floor": "07 TO 09", "_color": "rgba(77, 177, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1090000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1088.8646408389973, "lease": "95 years", "raw_floor": "04 TO 06", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1090000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 11 months", "raw_floor": "10 TO 12", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1065000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1063.8906811867266, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(83, 171, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1060000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1058.8958892562725, "lease": "94 years 09 months", "raw_floor": "13 TO 15", "_color": "rgba(79, 175, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1090000.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1172800.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1171.5783952073173, "lease": "94 years 10 months", "raw_floor": "13 TO 15", "_color": "rgba(169, 85, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1090000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 08 months", "raw_floor": "10 TO 12", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1140000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1138.8125601435383, "lease": "94 years 07 months", "raw_floor": "10 TO 12", "_color": "rgba(143, 111, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1103800.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1102.6502665670505, "lease": "94 years 06 months", "raw_floor": "07 TO 09", "_color": "rgba(114, 140, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1168000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1166.7833949540814, "lease": "94 years 06 months", "raw_floor": "13 TO 15", "_color": "rgba(165, 89, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1070000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 06 months", "raw_floor": "13 TO 15", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(139, 115, 0, 0.7)", "rgba(91, 163, 0, 0.7)", "rgba(115, 139, 0, 0.7)", "rgba(78, 176, 0, 0.7)", "rgba(150, 104, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(77, 177, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(83, 171, 0, 0.7)", "rgba(79, 175, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(169, 85, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(143, 111, 0, 0.7)", "rgba(114, 140, 0, 0.7)", "rgba(165, 89, 0, 0.7)", "rgba(87, 167, 0, 0.7)"], "pointRadius": [5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1079117.9775280901, "y": 5.0}, {"x": 1122454.966292135, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}] },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            title: { display: true, text: 'Floor Level' },
+                                            min: 0, max: 20,
+                                            ticks: { stepSize: 2 }
+                                        },
+                                        x: {
+                                            title: { display: true, text: 'Price (SGD)' },
+                                            ticks: { callback: (v) => '$' + v.toLocaleString() }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: { position: 'bottom' },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: (ctx) => {
+                                                    if (ctx.dataset.type === 'line') return ctx.dataset.label;
+                                                    const pt = ctx.raw;
+                                                    return [
+                                                        `${pt.model} (${pt.sqft} sqft) | ${pt.raw_floor}`,
+                                                        `Price: $${pt.x.toLocaleString()}`,
+                                                        `PSF: $${Math.round(pt.psf).toLocaleString()} psf`,
+                                                        `Lease: ${pt.lease}`,
+                                                        `Date: ${pt.date}`
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            // Store original data for filtering
+                            chart._originalDatasets = JSON.parse(JSON.stringify([{"label": "4 ROOM", "data": [{"y": 8.0, "x": 1135888.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1134.7048432599329, "lease": "95 years 01 month", "raw_floor": "07 TO 09", "_color": "rgba(139, 115, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1075000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1073.8802650476348, "lease": "95 years 01 month", "raw_floor": "10 TO 12", "_color": "rgba(91, 163, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 17.0, "x": 1105000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1103.8490166303595, "lease": "95 years 01 month", "raw_floor": "16 TO 18", "_color": "rgba(115, 139, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1059000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1057.8969308701817, "lease": "95 years 01 month", "raw_floor": "04 TO 06", "_color": "rgba(78, 176, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1150000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1148.8021440044465, "lease": "95 years", "raw_floor": "10 TO 12", "_color": "rgba(150, 104, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1070000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1068.8854731171807, "lease": "95 years", "raw_floor": "07 TO 09", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1058000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1056.8979724840908, "lease": "95 years", "raw_floor": "07 TO 09", "_color": "rgba(77, 177, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1090000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1088.8646408389973, "lease": "95 years", "raw_floor": "04 TO 06", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1090000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 11 months", "raw_floor": "10 TO 12", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1065000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1063.8906811867266, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(83, 171, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1060000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1058.8958892562725, "lease": "94 years 09 months", "raw_floor": "13 TO 15", "_color": "rgba(79, 175, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1090000.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1172800.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1171.5783952073173, "lease": "94 years 10 months", "raw_floor": "13 TO 15", "_color": "rgba(169, 85, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1090000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 08 months", "raw_floor": "10 TO 12", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1140000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1138.8125601435383, "lease": "94 years 07 months", "raw_floor": "10 TO 12", "_color": "rgba(143, 111, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1103800.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1102.6502665670505, "lease": "94 years 06 months", "raw_floor": "07 TO 09", "_color": "rgba(114, 140, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1168000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1166.7833949540814, "lease": "94 years 06 months", "raw_floor": "13 TO 15", "_color": "rgba(165, 89, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1070000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 06 months", "raw_floor": "13 TO 15", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(139, 115, 0, 0.7)", "rgba(91, 163, 0, 0.7)", "rgba(115, 139, 0, 0.7)", "rgba(78, 176, 0, 0.7)", "rgba(150, 104, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(77, 177, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(83, 171, 0, 0.7)", "rgba(79, 175, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(169, 85, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(143, 111, 0, 0.7)", "rgba(114, 140, 0, 0.7)", "rgba(165, 89, 0, 0.7)", "rgba(87, 167, 0, 0.7)"], "pointRadius": [5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1079117.9775280901, "y": 5.0}, {"x": 1122454.966292135, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}]));
+                            window.charts = window.charts || [];
+                            window.charts.push({
+                                id: '102B',
+                                instance: chart
+                            });
+                        })();
+                    </script>
+                </div>
+            
+                <div class="bg-white p-5 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 chart-card" id="card_103A" data-block="103A">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-700">Block 103A</h3>
+                            <p class="text-indigo-600 font-semibold text-sm mt-1">Insufficient Data</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500"><span id="count_103A">1</span> Transactions</p>
+                            <p class="font-bold text-gray-800" id="avg_103A">Avg: $1,100,000</p>
+                        </div>
+                    </div>
+                    <div class="relative h-96">
+                        <canvas id="chart_103A"></canvas>
+                    </div>
+                    <script>
+                        (function() {
+                            const ctx = document.getElementById('chart_103A');
+                            const chart = new Chart(ctx, {
+                                type: 'scatter',
+                                data: { datasets: [{"label": "4 ROOM", "data": [{"y": 11.0, "x": 1100000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1098.8542246999054, "lease": "94 years 06 months", "raw_floor": "10 TO 12", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(111, 143, 0, 0.7)"], "pointRadius": [5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}] },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            title: { display: true, text: 'Floor Level' },
+                                            min: 0, max: 20,
+                                            ticks: { stepSize: 2 }
+                                        },
+                                        x: {
+                                            title: { display: true, text: 'Price (SGD)' },
+                                            ticks: { callback: (v) => '$' + v.toLocaleString() }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: { position: 'bottom' },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: (ctx) => {
+                                                    if (ctx.dataset.type === 'line') return ctx.dataset.label;
+                                                    const pt = ctx.raw;
+                                                    return [
+                                                        `${pt.model} (${pt.sqft} sqft) | ${pt.raw_floor}`,
+                                                        `Price: $${pt.x.toLocaleString()}`,
+                                                        `PSF: $${Math.round(pt.psf).toLocaleString()} psf`,
+                                                        `Lease: ${pt.lease}`,
+                                                        `Date: ${pt.date}`
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            // Store original data for filtering
+                            chart._originalDatasets = JSON.parse(JSON.stringify([{"label": "4 ROOM", "data": [{"y": 11.0, "x": 1100000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1098.8542246999054, "lease": "94 years 06 months", "raw_floor": "10 TO 12", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(111, 143, 0, 0.7)"], "pointRadius": [5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}]));
+                            window.charts = window.charts || [];
+                            window.charts.push({
+                                id: '103A',
+                                instance: chart
+                            });
+                        })();
+                    </script>
+                </div>
+            </div></div>
+        <div class="space-y-6">
+            <div class="border-b-4 border-blue-500 pb-2">
+                <h2 class="text-3xl font-bold text-gray-800">Alkaff Lakeview</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+                <div class="bg-white p-5 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 chart-card" id="card_115A" data-block="115A">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-700">Block 115A</h3>
+                            <p class="text-indigo-600 font-semibold text-sm mt-1">4 ROOM: +$963/floor</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500"><span id="count_115A">6</span> Transactions</p>
+                            <p class="font-bold text-gray-800" id="avg_115A">Avg: $1,046,481</p>
+                        </div>
+                    </div>
+                    <div class="relative h-96">
+                        <canvas id="chart_115A"></canvas>
+                    </div>
+                    <script>
+                        (function() {
+                            const ctx = document.getElementById('chart_115A');
+                            const chart = new Chart(ctx, {
+                                type: 'scatter',
+                                data: { datasets: [{"label": "4 ROOM", "data": [{"y": 8.0, "x": 1040000.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1038.916721534456, "lease": "94 years 10 months", "raw_floor": "07 TO 09", "_color": "rgba(63, 191, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1058000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1056.8979724840908, "lease": "94 years 07 months", "raw_floor": "07 TO 09", "_color": "rgba(77, 177, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1042000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1040.9146383066377, "lease": "94 years 06 months", "raw_floor": "07 TO 09", "_color": "rgba(65, 189, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1070000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 06 months", "raw_floor": "07 TO 09", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1048888.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1047.7954636700313, "lease": "94 years 03 months", "raw_floor": "10 TO 12", "_color": "rgba(70, 184, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1020000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1018.9375538126396, "lease": "94 years", "raw_floor": "07 TO 09", "_color": "rgba(47, 207, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(63, 191, 0, 0.7)", "rgba(77, 177, 0, 0.7)", "rgba(65, 189, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(70, 184, 0, 0.7)", "rgba(47, 207, 0, 0.7)"], "pointRadius": [5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1046000.0, "y": 8.0}, {"x": 1048888.0, "y": 11.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}] },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            title: { display: true, text: 'Floor Level' },
+                                            min: 0, max: 20,
+                                            ticks: { stepSize: 2 }
+                                        },
+                                        x: {
+                                            title: { display: true, text: 'Price (SGD)' },
+                                            ticks: { callback: (v) => '$' + v.toLocaleString() }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: { position: 'bottom' },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: (ctx) => {
+                                                    if (ctx.dataset.type === 'line') return ctx.dataset.label;
+                                                    const pt = ctx.raw;
+                                                    return [
+                                                        `${pt.model} (${pt.sqft} sqft) | ${pt.raw_floor}`,
+                                                        `Price: $${pt.x.toLocaleString()}`,
+                                                        `PSF: $${Math.round(pt.psf).toLocaleString()} psf`,
+                                                        `Lease: ${pt.lease}`,
+                                                        `Date: ${pt.date}`
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            // Store original data for filtering
+                            chart._originalDatasets = JSON.parse(JSON.stringify([{"label": "4 ROOM", "data": [{"y": 8.0, "x": 1040000.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1038.916721534456, "lease": "94 years 10 months", "raw_floor": "07 TO 09", "_color": "rgba(63, 191, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1058000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1056.8979724840908, "lease": "94 years 07 months", "raw_floor": "07 TO 09", "_color": "rgba(77, 177, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1042000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1040.9146383066377, "lease": "94 years 06 months", "raw_floor": "07 TO 09", "_color": "rgba(65, 189, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1070000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 06 months", "raw_floor": "07 TO 09", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1048888.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1047.7954636700313, "lease": "94 years 03 months", "raw_floor": "10 TO 12", "_color": "rgba(70, 184, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1020000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1018.9375538126396, "lease": "94 years", "raw_floor": "07 TO 09", "_color": "rgba(47, 207, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(63, 191, 0, 0.7)", "rgba(77, 177, 0, 0.7)", "rgba(65, 189, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(70, 184, 0, 0.7)", "rgba(47, 207, 0, 0.7)"], "pointRadius": [5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1046000.0, "y": 8.0}, {"x": 1048888.0, "y": 11.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}]));
+                            window.charts = window.charts || [];
+                            window.charts.push({
+                                id: '115A',
+                                instance: chart
+                            });
+                        })();
+                    </script>
+                </div>
+            
+                <div class="bg-white p-5 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 chart-card" id="card_115C" data-block="115C">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-700">Block 115C</h3>
+                            <p class="text-indigo-600 font-semibold text-sm mt-1">4 ROOM: +$12,975/floor</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500"><span id="count_115C">11</span> Transactions</p>
+                            <p class="font-bold text-gray-800" id="avg_115C">Avg: $1,166,707</p>
+                        </div>
+                    </div>
+                    <div class="relative h-96">
+                        <canvas id="chart_115C"></canvas>
+                    </div>
+                    <script>
+                        (function() {
+                            const ctx = document.getElementById('chart_115C');
+                            const chart = new Chart(ctx, {
+                                type: 'scatter',
+                                data: { datasets: [{"label": "4 ROOM", "data": [{"y": 11.0, "x": 1238888.0, "model": "Model A", "date": "2025-01", "sqft": 1044, "psf": 1186.5626062220388, "lease": "95 years", "raw_floor": "10 TO 12", "_color": "rgba(181, 73, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 17.0, "x": 1060000.0, "model": "Model A", "date": "2025-01", "sqft": 1044, "psf": 1015.2300793900346, "lease": "95 years", "raw_floor": "16 TO 18", "_color": "rgba(44, 210, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 14.0, "x": 1150000.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1148.8021440044465, "lease": "94 years 10 months", "raw_floor": "13 TO 15", "_color": "rgba(150, 104, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1040000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1038.916721534456, "lease": "94 years 09 months", "raw_floor": "07 TO 09", "_color": "rgba(63, 191, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1070000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 09 months", "raw_floor": "07 TO 09", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1050000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1048.9063053953644, "lease": "94 years 06 months", "raw_floor": "07 TO 09", "_color": "rgba(71, 183, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1208888.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 1157.8296794468492, "lease": "94 years 04 months", "raw_floor": "07 TO 09", "_color": "rgba(158, 96, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 11.0, "x": 1270000.0, "model": "Model A", "date": "2025-11", "sqft": 1044, "psf": 1216.360566816362, "lease": "94 years 02 months", "raw_floor": "10 TO 12", "_color": "rgba(204, 50, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 14.0, "x": 1320000.0, "model": "Model A", "date": "2025-12", "sqft": 1044, "psf": 1264.2487781083448, "lease": "94 years 01 month", "raw_floor": "13 TO 15", "_color": "rgba(242, 12, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 14.0, "x": 1336000.0, "model": "Model A", "date": "2026-01", "sqft": 1044, "psf": 1279.5730057217795, "lease": "94 years", "raw_floor": "13 TO 15", "_color": "rgba(255, 0, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1090000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years", "raw_floor": "07 TO 09", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(181, 73, 0, 0.7)", "rgba(44, 210, 0, 0.7)", "rgba(150, 104, 0, 0.7)", "rgba(63, 191, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(71, 183, 0, 0.7)", "rgba(158, 96, 0, 0.7)", "rgba(204, 50, 0, 0.7)", "rgba(242, 12, 0, 0.7)", "rgba(255, 0, 0, 0.7)", "rgba(103, 151, 0, 0.7)"], "pointRadius": [6.602457499999997, 6.602457499999997, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 6.602457499999997, 6.602457499999997, 6.602457499999997, 6.602457499999997, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1127780.909090909, "y": 8.0}, {"x": 1244558.909090909, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}] },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            title: { display: true, text: 'Floor Level' },
+                                            min: 0, max: 20,
+                                            ticks: { stepSize: 2 }
+                                        },
+                                        x: {
+                                            title: { display: true, text: 'Price (SGD)' },
+                                            ticks: { callback: (v) => '$' + v.toLocaleString() }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: { position: 'bottom' },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: (ctx) => {
+                                                    if (ctx.dataset.type === 'line') return ctx.dataset.label;
+                                                    const pt = ctx.raw;
+                                                    return [
+                                                        `${pt.model} (${pt.sqft} sqft) | ${pt.raw_floor}`,
+                                                        `Price: $${pt.x.toLocaleString()}`,
+                                                        `PSF: $${Math.round(pt.psf).toLocaleString()} psf`,
+                                                        `Lease: ${pt.lease}`,
+                                                        `Date: ${pt.date}`
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            // Store original data for filtering
+                            chart._originalDatasets = JSON.parse(JSON.stringify([{"label": "4 ROOM", "data": [{"y": 11.0, "x": 1238888.0, "model": "Model A", "date": "2025-01", "sqft": 1044, "psf": 1186.5626062220388, "lease": "95 years", "raw_floor": "10 TO 12", "_color": "rgba(181, 73, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 17.0, "x": 1060000.0, "model": "Model A", "date": "2025-01", "sqft": 1044, "psf": 1015.2300793900346, "lease": "95 years", "raw_floor": "16 TO 18", "_color": "rgba(44, 210, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 14.0, "x": 1150000.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1148.8021440044465, "lease": "94 years 10 months", "raw_floor": "13 TO 15", "_color": "rgba(150, 104, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1040000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1038.916721534456, "lease": "94 years 09 months", "raw_floor": "07 TO 09", "_color": "rgba(63, 191, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1070000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 09 months", "raw_floor": "07 TO 09", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1050000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1048.9063053953644, "lease": "94 years 06 months", "raw_floor": "07 TO 09", "_color": "rgba(71, 183, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1208888.0, "model": "Model A", "date": "2025-08", "sqft": 1044, "psf": 1157.8296794468492, "lease": "94 years 04 months", "raw_floor": "07 TO 09", "_color": "rgba(158, 96, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 11.0, "x": 1270000.0, "model": "Model A", "date": "2025-11", "sqft": 1044, "psf": 1216.360566816362, "lease": "94 years 02 months", "raw_floor": "10 TO 12", "_color": "rgba(204, 50, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 14.0, "x": 1320000.0, "model": "Model A", "date": "2025-12", "sqft": 1044, "psf": 1264.2487781083448, "lease": "94 years 01 month", "raw_floor": "13 TO 15", "_color": "rgba(242, 12, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 14.0, "x": 1336000.0, "model": "Model A", "date": "2026-01", "sqft": 1044, "psf": 1279.5730057217795, "lease": "94 years", "raw_floor": "13 TO 15", "_color": "rgba(255, 0, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 8.0, "x": 1090000.0, "model": "Model A", "date": "2026-01", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years", "raw_floor": "07 TO 09", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(181, 73, 0, 0.7)", "rgba(44, 210, 0, 0.7)", "rgba(150, 104, 0, 0.7)", "rgba(63, 191, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(71, 183, 0, 0.7)", "rgba(158, 96, 0, 0.7)", "rgba(204, 50, 0, 0.7)", "rgba(242, 12, 0, 0.7)", "rgba(255, 0, 0, 0.7)", "rgba(103, 151, 0, 0.7)"], "pointRadius": [6.602457499999997, 6.602457499999997, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 6.602457499999997, 6.602457499999997, 6.602457499999997, 6.602457499999997, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1127780.909090909, "y": 8.0}, {"x": 1244558.909090909, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}]));
+                            window.charts = window.charts || [];
+                            window.charts.push({
+                                id: '115C',
+                                instance: chart
+                            });
+                        })();
+                    </script>
+                </div>
+            
+                <div class="bg-white p-5 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 chart-card" id="card_118A" data-block="118A">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-700">Block 118A</h3>
+                            <p class="text-indigo-600 font-semibold text-sm mt-1">4 ROOM: +$7,578/floor</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500"><span id="count_118A">30</span> Transactions</p>
+                            <p class="font-bold text-gray-800" id="avg_118A">Avg: $1,105,011</p>
+                        </div>
+                    </div>
+                    <div class="relative h-96">
+                        <canvas id="chart_118A"></canvas>
+                    </div>
+                    <script>
+                        (function() {
+                            const ctx = document.getElementById('chart_118A');
+                            const chart = new Chart(ctx, {
+                                type: 'scatter',
+                                data: { datasets: [{"label": "4 ROOM", "data": [{"y": 11.0, "x": 1258888.0, "model": "Model A", "date": "2025-02", "sqft": 1044, "psf": 1205.717890738832, "lease": "94 years 10 months", "raw_floor": "10 TO 12", "_color": "rgba(196, 58, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 5.0, "x": 1118000.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1116.8354756495403, "lease": "94 years 10 months", "raw_floor": "04 TO 06", "_color": "rgba(125, 129, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1080000.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1078.8750569780889, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(95, 159, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1181888.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1180.6569290201107, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(176, 78, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1100000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1098.8542246999054, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1200000.0, "model": "Model A", "date": "2025-04", "sqft": 1044, "psf": 1149.3170710075863, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(151, 103, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 5.0, "x": 1000000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 998.9583860908232, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(31, 223, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1130000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1128.8229762826302, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(135, 119, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 17.0, "x": 1138888.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1137.7017184182055, "lease": "94 years 08 months", "raw_floor": "16 TO 18", "_color": "rgba(142, 112, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 2.0, "x": 960000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 959.0000506471902, "lease": "94 years 08 months", "raw_floor": "01 TO 03", "_color": "rgba(0, 255, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 2.0, "x": 1090000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 08 months", "raw_floor": "01 TO 03", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1103888.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1102.7381749050267, "lease": "94 years 08 months", "raw_floor": "10 TO 12", "_color": "rgba(114, 140, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1130000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1128.8229762826302, "lease": "94 years 08 months", "raw_floor": "13 TO 15", "_color": "rgba(135, 119, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1145000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1143.8073520739924, "lease": "94 years 07 months", "raw_floor": "13 TO 15", "_color": "rgba(147, 107, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 17.0, "x": 1070000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 07 months", "raw_floor": "16 TO 18", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1080000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1078.8750569780889, "lease": "94 years 07 months", "raw_floor": "04 TO 06", "_color": "rgba(95, 159, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1150000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1148.8021440044465, "lease": "94 years 07 months", "raw_floor": "04 TO 06", "_color": "rgba(150, 104, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1070000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 05 months", "raw_floor": "04 TO 06", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1090000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 05 months", "raw_floor": "10 TO 12", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1052888.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1051.7912972143945, "lease": "94 years 05 months", "raw_floor": "07 TO 09", "_color": "rgba(73, 181, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1176888.0, "model": "Model A", "date": "2025-08", "sqft": 1001, "psf": 1175.6621370896567, "lease": "94 years 04 months", "raw_floor": "10 TO 12", "_color": "rgba(172, 82, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 2.0, "x": 1008000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1006.9500531795497, "lease": "94 years 04 months", "raw_floor": "01 TO 03", "_color": "rgba(38, 216, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1080000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1078.8750569780889, "lease": "94 years 04 months", "raw_floor": "04 TO 06", "_color": "rgba(95, 159, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1030000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1028.9271376735478, "lease": "94 years 03 months", "raw_floor": "07 TO 09", "_color": "rgba(55, 199, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1060000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1058.8958892562725, "lease": "94 years 03 months", "raw_floor": "07 TO 09", "_color": "rgba(79, 175, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1088000.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1086.8667240668156, "lease": "94 years 02 months", "raw_floor": "07 TO 09", "_color": "rgba(101, 153, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1030000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1028.9271376735478, "lease": "94 years 02 months", "raw_floor": "04 TO 06", "_color": "rgba(55, 199, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1180000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1178.7708955871713, "lease": "94 years 01 month", "raw_floor": "13 TO 15", "_color": "rgba(174, 80, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1168000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1166.7833949540814, "lease": "94 years 01 month", "raw_floor": "13 TO 15", "_color": "rgba(165, 89, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1180000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1178.7708955871713, "lease": "94 years 01 month", "raw_floor": "10 TO 12", "_color": "rgba(174, 80, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(196, 58, 0, 0.7)", "rgba(125, 129, 0, 0.7)", "rgba(95, 159, 0, 0.7)", "rgba(176, 78, 0, 0.7)", "rgba(111, 143, 0, 0.7)", "rgba(151, 103, 0, 0.7)", "rgba(31, 223, 0, 0.7)", "rgba(135, 119, 0, 0.7)", "rgba(142, 112, 0, 0.7)", "rgba(0, 255, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(114, 140, 0, 0.7)", "rgba(135, 119, 0, 0.7)", "rgba(147, 107, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(95, 159, 0, 0.7)", "rgba(150, 104, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(73, 181, 0, 0.7)", "rgba(172, 82, 0, 0.7)", "rgba(38, 216, 0, 0.7)", "rgba(95, 159, 0, 0.7)", "rgba(55, 199, 0, 0.7)", "rgba(79, 175, 0, 0.7)", "rgba(101, 153, 0, 0.7)", "rgba(55, 199, 0, 0.7)", "rgba(174, 80, 0, 0.7)", "rgba(165, 89, 0, 0.7)", "rgba(174, 80, 0, 0.7)"], "pointRadius": [6.602457499999997, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 6.602457499999997, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1054237.2536664857, "y": 2.0}, {"x": 1167909.67083107, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}] },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            title: { display: true, text: 'Floor Level' },
+                                            min: 0, max: 20,
+                                            ticks: { stepSize: 2 }
+                                        },
+                                        x: {
+                                            title: { display: true, text: 'Price (SGD)' },
+                                            ticks: { callback: (v) => '$' + v.toLocaleString() }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: { position: 'bottom' },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: (ctx) => {
+                                                    if (ctx.dataset.type === 'line') return ctx.dataset.label;
+                                                    const pt = ctx.raw;
+                                                    return [
+                                                        `${pt.model} (${pt.sqft} sqft) | ${pt.raw_floor}`,
+                                                        `Price: $${pt.x.toLocaleString()}`,
+                                                        `PSF: $${Math.round(pt.psf).toLocaleString()} psf`,
+                                                        `Lease: ${pt.lease}`,
+                                                        `Date: ${pt.date}`
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            // Store original data for filtering
+                            chart._originalDatasets = JSON.parse(JSON.stringify([{"label": "4 ROOM", "data": [{"y": 11.0, "x": 1258888.0, "model": "Model A", "date": "2025-02", "sqft": 1044, "psf": 1205.717890738832, "lease": "94 years 10 months", "raw_floor": "10 TO 12", "_color": "rgba(196, 58, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 5.0, "x": 1118000.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1116.8354756495403, "lease": "94 years 10 months", "raw_floor": "04 TO 06", "_color": "rgba(125, 129, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1080000.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1078.8750569780889, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(95, 159, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1181888.0, "model": "Model A", "date": "2025-03", "sqft": 1001, "psf": 1180.6569290201107, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(176, 78, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1100000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1098.8542246999054, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(111, 143, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1200000.0, "model": "Model A", "date": "2025-04", "sqft": 1044, "psf": 1149.3170710075863, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(151, 103, 0, 0.7)", "_radius": 6.602457499999997}, {"y": 5.0, "x": 1000000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 998.9583860908232, "lease": "94 years 09 months", "raw_floor": "04 TO 06", "_color": "rgba(31, 223, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1130000.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1128.8229762826302, "lease": "94 years 09 months", "raw_floor": "10 TO 12", "_color": "rgba(135, 119, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 17.0, "x": 1138888.0, "model": "Model A", "date": "2025-04", "sqft": 1001, "psf": 1137.7017184182055, "lease": "94 years 08 months", "raw_floor": "16 TO 18", "_color": "rgba(142, 112, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 2.0, "x": 960000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 959.0000506471902, "lease": "94 years 08 months", "raw_floor": "01 TO 03", "_color": "rgba(0, 255, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 2.0, "x": 1090000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 08 months", "raw_floor": "01 TO 03", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1103888.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1102.7381749050267, "lease": "94 years 08 months", "raw_floor": "10 TO 12", "_color": "rgba(114, 140, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1130000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1128.8229762826302, "lease": "94 years 08 months", "raw_floor": "13 TO 15", "_color": "rgba(135, 119, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1145000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1143.8073520739924, "lease": "94 years 07 months", "raw_floor": "13 TO 15", "_color": "rgba(147, 107, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 17.0, "x": 1070000.0, "model": "Model A", "date": "2025-05", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 07 months", "raw_floor": "16 TO 18", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1080000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1078.8750569780889, "lease": "94 years 07 months", "raw_floor": "04 TO 06", "_color": "rgba(95, 159, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1150000.0, "model": "Model A", "date": "2025-06", "sqft": 1001, "psf": 1148.8021440044465, "lease": "94 years 07 months", "raw_floor": "04 TO 06", "_color": "rgba(150, 104, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1070000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1068.8854731171807, "lease": "94 years 05 months", "raw_floor": "04 TO 06", "_color": "rgba(87, 167, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1090000.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1088.8646408389973, "lease": "94 years 05 months", "raw_floor": "10 TO 12", "_color": "rgba(103, 151, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1052888.0, "model": "Model A", "date": "2025-07", "sqft": 1001, "psf": 1051.7912972143945, "lease": "94 years 05 months", "raw_floor": "07 TO 09", "_color": "rgba(73, 181, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1176888.0, "model": "Model A", "date": "2025-08", "sqft": 1001, "psf": 1175.6621370896567, "lease": "94 years 04 months", "raw_floor": "10 TO 12", "_color": "rgba(172, 82, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 2.0, "x": 1008000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1006.9500531795497, "lease": "94 years 04 months", "raw_floor": "01 TO 03", "_color": "rgba(38, 216, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1080000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1078.8750569780889, "lease": "94 years 04 months", "raw_floor": "04 TO 06", "_color": "rgba(95, 159, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1030000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1028.9271376735478, "lease": "94 years 03 months", "raw_floor": "07 TO 09", "_color": "rgba(55, 199, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1060000.0, "model": "Model A", "date": "2025-09", "sqft": 1001, "psf": 1058.8958892562725, "lease": "94 years 03 months", "raw_floor": "07 TO 09", "_color": "rgba(79, 175, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 8.0, "x": 1088000.0, "model": "Model A", "date": "2025-10", "sqft": 1001, "psf": 1086.8667240668156, "lease": "94 years 02 months", "raw_floor": "07 TO 09", "_color": "rgba(101, 153, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 5.0, "x": 1030000.0, "model": "Model A", "date": "2025-11", "sqft": 1001, "psf": 1028.9271376735478, "lease": "94 years 02 months", "raw_floor": "04 TO 06", "_color": "rgba(55, 199, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1180000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1178.7708955871713, "lease": "94 years 01 month", "raw_floor": "13 TO 15", "_color": "rgba(174, 80, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 14.0, "x": 1168000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1166.7833949540814, "lease": "94 years 01 month", "raw_floor": "13 TO 15", "_color": "rgba(165, 89, 0, 0.7)", "_radius": 5.526067499999999}, {"y": 11.0, "x": 1180000.0, "model": "Model A", "date": "2025-12", "sqft": 1001, "psf": 1178.7708955871713, "lease": "94 years 01 month", "raw_floor": "10 TO 12", "_color": "rgba(174, 80, 0, 0.7)", "_radius": 5.526067499999999}], "backgroundColor": ["rgba(196, 58, 0, 0.7)", "rgba(125, 129, 0, 0.7)", "rgba(95, 159, 0, 0.7)", "rgba(176, 78, 0, 0.7)", "rgba(111, 143, 0, 0.7)", "rgba(151, 103, 0, 0.7)", "rgba(31, 223, 0, 0.7)", "rgba(135, 119, 0, 0.7)", "rgba(142, 112, 0, 0.7)", "rgba(0, 255, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(114, 140, 0, 0.7)", "rgba(135, 119, 0, 0.7)", "rgba(147, 107, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(95, 159, 0, 0.7)", "rgba(150, 104, 0, 0.7)", "rgba(87, 167, 0, 0.7)", "rgba(103, 151, 0, 0.7)", "rgba(73, 181, 0, 0.7)", "rgba(172, 82, 0, 0.7)", "rgba(38, 216, 0, 0.7)", "rgba(95, 159, 0, 0.7)", "rgba(55, 199, 0, 0.7)", "rgba(79, 175, 0, 0.7)", "rgba(101, 153, 0, 0.7)", "rgba(55, 199, 0, 0.7)", "rgba(174, 80, 0, 0.7)", "rgba(165, 89, 0, 0.7)", "rgba(174, 80, 0, 0.7)"], "pointRadius": [6.602457499999997, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 6.602457499999997, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999, 5.526067499999999], "borderColor": "rgba(0,0,0,0.1)", "borderWidth": 1, "order": 2}, {"label": "4 ROOM Trend", "type": "line", "data": [{"x": 1054237.2536664857, "y": 2.0}, {"x": 1167909.67083107, "y": 17.0}], "borderColor": "#36A2EB", "borderWidth": 2, "borderDash": [5, 5], "pointRadius": 0, "fill": false, "order": 1}]));
+                            window.charts = window.charts || [];
+                            window.charts.push({
+                                id: '118A',
+                                instance: chart
+                            });
+                        })();
+                    </script>
+                </div>
+            </div></div>
+    </div>
+    
+    <script>
+        const startInput = document.getElementById('startDate');
+        const endInput = document.getElementById('endDate');
+        const regressionMap = {"101A": {"4 ROOM": {"floor_slope": 4770.226537216829, "floor_intercept": 1076488.6731391586, "time_slope": -19066.666666666668, "avg_month": 23.625, "count": 8}}, "102A": {"4 ROOM": {"floor_slope": 12387.588095238096, "floor_intercept": 1010541.3095238096, "time_slope": -7583.092143549951, "avg_month": 19.96, "count": 25}}, "102B": {"4 ROOM": {"floor_slope": 3611.4157303370785, "floor_intercept": 1061060.8988764046, "time_slope": 3216.0, "avg_month": 20.666666666666668, "count": 18}}, "103A": {"4 ROOM": {"floor_slope": 0, "floor_intercept": 0, "time_slope": 0, "avg_month": 25.0, "count": 1}}, "115A": {"4 ROOM": {"floor_slope": 962.6666666666666, "floor_intercept": 1038298.6666666666, "time_slope": -2159.0243902439024, "avg_month": 19.5, "count": 6}}, "115C": {"4 ROOM": {"floor_slope": 12975.333333333334, "floor_intercept": 1023978.2424242423, "time_slope": 12848.12181069959, "avg_month": 18.90909090909091, "count": 11}}, "118A": {"4 ROOM": {"floor_slope": 7578.161144305631, "floor_intercept": 1039080.9313778743, "time_slope": -2431.4792899408285, "avg_month": 18.5, "count": 30}}};
+        
+        // Populate Selects
+        const blocks = Object.keys(regressionMap).sort();
+        const blockSelect = document.getElementById('calcBlock');
+        const typeSelect = document.getElementById('calcType');
+        
+        blocks.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b;
+            opt.innerText = "Block " + b;
+            blockSelect.appendChild(opt);
+        });
+        
+        function updateTypes() {
+            const blk = blockSelect.value;
+            typeSelect.innerHTML = '';
+            if (regressionMap[blk]) {
+                Object.keys(regressionMap[blk]).forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t;
+                    opt.innerText = t;
+                    typeSelect.appendChild(opt);
+                });
+            }
+        }
+        blockSelect.addEventListener('change', updateTypes);
+        updateTypes(); // Init
+        
+        function calculateValuation() {
+            const blk = blockSelect.value;
+            const type = typeSelect.value;
+            const price = parseFloat(document.getElementById('calcPrice').value);
+            const floor = parseFloat(document.getElementById('calcFloor').value);
+            const sqft = parseFloat(document.getElementById('calcSqft').value); // Just for reference or PSF
+            
+            const resultDiv = document.getElementById('calcResult');
+            
+            if (!price || !floor || !blk || !type) {
+                resultDiv.innerText = "Please fill all fields.";
+                resultDiv.className = "mt-3 text-center text-sm font-semibold p-2 rounded bg-gray-200 text-gray-800";
+                resultDiv.classList.remove('hidden');
+                return;
+            }
+            
+            const data = regressionMap[blk][type];
+            if (!data || data.floor_slope === 0) {
+                resultDiv.innerText = "Not enough data for this block/type.";
+                resultDiv.className = "mt-3 text-center text-sm font-semibold p-2 rounded bg-yellow-100 text-yellow-800";
+                resultDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // Calculate current month (months since Jan 2024)
+            const now = new Date();
+            const currentMonth = (now.getFullYear() - 2024) * 12 + (now.getMonth() + 1);
+            
+            // Base fair value from floor regression
+            let fairValue = data.floor_slope * floor + data.floor_intercept;
+            
+            // Apply time appreciation (adjust from avg data date to now)
+            const monthsElapsed = currentMonth - data.avg_month;
+            const timeAdjustment = data.time_slope * monthsElapsed;
+            fairValue += timeAdjustment;
+            const diff = price - fairValue;
+            let status = "";
+            let colorClass = "";
+            
+            if (diff > 0) {
+                status = `OVERVALUED by $${Math.abs(diff).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+                colorClass = "bg-red-100 text-red-800 border border-red-200";
+            } else {
+                status = `UNDERVALUED by $${Math.abs(diff).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+                colorClass = "bg-green-100 text-green-800 border border-green-200";
+            }
+            
+            const fairPSF = sqft ? (fairValue / sqft).toFixed(0) : "?";
+            const timeInfo = data.time_slope > 0 ? `+$${(data.time_slope).toLocaleString(undefined, {maximumFractionDigits: 0})}/mo` : "";
+            
+            resultDiv.innerHTML = `
+                <div>${status}</div>
+                <div class="text-xs font-normal mt-1 text-gray-600">
+                    Est. Fair Value (Today): <b>$${fairValue.toLocaleString(undefined, {maximumFractionDigits: 0})}</b> ($${fairPSF} psf)
+                    ${timeInfo ? `<span class="text-indigo-600 ml-1">(${timeInfo})</span>` : ""}
+                </div>
+            `;
+            resultDiv.className = `mt-3 text-center text-sm font-bold p-3 rounded block ${colorClass}`;
+            
+            // Highlight Chart
+            document.querySelectorAll('.chart-card').forEach(c => c.classList.remove('highlight-chart'));
+            const targetCard = document.getElementById('card_' + blk);
+            if (targetCard) {
+                targetCard.scrollIntoView({behavior: 'smooth', block: 'center'});
+                targetCard.classList.add('highlight-chart');
+                
+                // Add temporary point to chart?
+                // For simplicity, we just scroll to it consistently.
+                // Advanced: Would be nice to plot "You Are Here"
+            }
+        }
+
+        function filterCharts() {
+            const start = startInput.value;
+            const end = endInput.value;
+            
+            window.charts.forEach(item => {
+                const chart = item.instance;
+                const blockId = item.id;
+                
+                let totalCount = 0;
+                let totalPrice = 0;
+                
+                chart.data.datasets = JSON.parse(JSON.stringify(chart._originalDatasets));
+                
+                chart.data.datasets.forEach(dataset => {
+                    if (dataset.type === 'line') return; // Skip trend lines in filter logic if static? 
+                    // Actually calculating trend lines dynamically is hard in JS without library, 
+                    // so we filter points but maybe keep trend line static or hide it if no points?
+                    // For now, let's just filter scatter points.
+                    
+                    const filteredData = [];
+                    const filteredColors = [];
+                    const filteredRadii = [];
+                    
+                    dataset.data.forEach((pt, index) => {
+                        if (pt.date >= start && pt.date <= end) {
+                            filteredData.push(pt);
+                            filteredColors.push(dataset.backgroundColor[index]);
+                            filteredRadii.push(dataset.pointRadius[index]);
+                            
+                            totalCount++;
+                            totalPrice += pt.x;
+                        }
+                    });
+                    
+                    dataset.data = filteredData;
+                    dataset.backgroundColor = filteredColors;
+                    dataset.pointRadius = filteredRadii;
+                });
+                
+                chart.update();
+                
+                const countElem = document.getElementById(`count_${blockId}`);
+                const avgElem = document.getElementById(`avg_${blockId}`);
+                
+                if (countElem) countElem.innerText = totalCount;
+                if (avgElem) {
+                    const avg = totalCount > 0 ? totalPrice / totalCount : 0;
+                    avgElem.innerText = `Avg: $${avg.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+                }
+            });
+        }
+        
+        startInput.addEventListener('change', filterCharts);
+        endInput.addEventListener('change', filterCharts);
+    </script>
+</body>
+</html>
+    
