@@ -19,45 +19,58 @@ function initFeaturedSpotlight() {
 
     if (!featuredApp || !featuredContainer) return;
 
-    // Based on the Apple standard product-tile
     const html = `
-        <div class="product-tile product-tile-dark photo-shadow" style="border-radius: 18px; padding: 40px; display: flex; flex-direction: column; align-items: center; max-width: 1000px; margin: 0 auto; gap: 40px; background-color: var(--tile-1);">
-            <div style="text-align: center; max-width: 600px;">
-                <div style="color: var(--focus-blue); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
-                    Featured App
+        <div class="product-tile product-tile-dark photo-shadow" style="border-radius: 24px; display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; max-width: 1100px; margin: 0 auto; background-color: var(--tile-1); overflow: hidden; position: relative;">
+            
+            <!-- Text Content Side -->
+            <div style="flex: 1 1 400px; padding: 60px 40px; text-align: left; z-index: 2;">
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                    <img src="${featuredApp.icon}" style="width: 72px; height: 72px; border-radius: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.3);" alt="Icon">
+                    <div>
+                        <div style="color: var(--focus-blue); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">
+                            Featured App
+                        </div>
+                        <h2 class="display-text" style="font-size: 40px; line-height: 1;">
+                            ${featuredApp.name}
+                        </h2>
+                    </div>
                 </div>
-                <h2 class="display-text" style="font-size: 56px; margin-bottom: 16px;">
-                    ${featuredApp.name}
-                </h2>
-                <p style="font-size: 24px; color: var(--text-color); opacity: 0.8; margin-bottom: 24px; font-weight: 400; line-height: 1.16667;">
+                
+                <p style="font-size: 20px; color: var(--text-color); opacity: 0.8; margin-bottom: 32px; font-weight: 400; line-height: 1.4;">
                     ${featuredApp.description}
                 </p>
-                <div style="display: flex; gap: 16px; justify-content: center; margin-bottom: 32px;">
-                    <a href="${featuredApp.appStoreUrl}" target="_blank" class="btn btn-primary-pill">
-                        Download on App Store
+                
+                <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 40px;">
+                    <a href="${featuredApp.appStoreUrl}" target="_blank" class="btn btn-primary-pill" style="font-size: 15px; padding: 12px 24px;">
+                        Get on App Store
                     </a>
-                    <a href="#contact" class="btn btn-link" style="color: var(--text-color);">
+                    <a href="#contact" class="btn btn-white-capsule" style="background-color: rgba(255,255,255,0.1); color: var(--pure-white);">
                         Learn More
                     </a>
                 </div>
 
                 <!-- Feature Bullets -->
-                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 32px;">
+                <div style="display: flex; flex-direction: column; gap: 16px;">
                     ${featuredApp.bullets.map(bullet => `
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <svg width="20" height="20" style="color: var(--focus-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--text-color);">${bullet}</span>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="background: rgba(0, 113, 227, 0.2); padding: 6px; border-radius: 50%;">
+                                <svg width="16" height="16" style="color: var(--focus-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <span style="font-size: 15px; font-weight: 500; color: var(--text-color); opacity: 0.9;">${bullet}</span>
                         </div>
                     `).join('')}
                 </div>
             </div>
 
-            <!-- Carousel Visual -->
-            <div style="position: relative; width: 100%; max-width: 800px; overflow: hidden; border-radius: 20px;" class="photo-shadow group">
-                <div style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;" class="no-scrollbar" id="spotlight-carousel">
-                    ${featuredApp.screenshots.map((src, idx) => `
-                        <img src="${src}" alt="${featuredApp.name} Screenshot ${idx + 1}" style="width: 100%; object-fit: contain; scroll-snap-align: center; flex-shrink: 0;" loading="lazy">
-                    `).join('')}
+            <!-- Carousel Visual Side -->
+            <div style="flex: 1 1 300px; padding: 40px; display: flex; justify-content: center; align-items: center; position: relative;">
+                <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(0, 113, 227, 0.15) 0%, transparent 70%);"></div>
+                <div style="position: relative; width: 100%; max-width: 320px; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);" class="group">
+                    <div style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;" class="no-scrollbar" id="spotlight-carousel">
+                        ${featuredApp.screenshots.map((src, idx) => `
+                            <img src="${src}" alt="${featuredApp.name} Screenshot ${idx + 1}" style="width: 100%; height: auto; scroll-snap-align: center; flex-shrink: 0; display: block;" loading="lazy">
+                        `).join('')}
+                    </div>
                 </div>
             </div>
         </div>
