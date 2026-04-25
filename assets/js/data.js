@@ -3,6 +3,7 @@ const APPS = [
         slug: "treasure-life",
         name: "Treasure Life",
         tagline: "Life & Memories",
+        accent: "linear-gradient(135deg, #f59e0b, #ef4444)",
         bullets: [
             "Capture precious moments",
             "Organize memories effortlessly",
@@ -17,13 +18,13 @@ const APPS = [
         ],
         platforms: ["iOS", "iPadOS"],
         appStoreUrl: "https://apps.apple.com/us/app/treasure-life/id6741671694",
-        websiteUrl: "#",
         featured: true
     },
     {
         slug: "riskm",
         name: "RiskM",
         tagline: "Trading Utility",
+        accent: "linear-gradient(135deg, #10b981, #06b6d4)",
         bullets: [
             "Calculate position sizing",
             "Manage risk per trade",
@@ -38,13 +39,13 @@ const APPS = [
         ],
         platforms: ["iOS"],
         appStoreUrl: "https://apps.apple.com/us/app/riskm-manage-trading-risk/id6737332775",
-        websiteUrl: "#",
         featured: false
     },
     {
         slug: "tomorrow",
         name: "Tomorrow",
         tagline: "Focus & Productivity",
+        accent: "linear-gradient(135deg, #6366f1, #8b5cf6)",
         bullets: [
             "One list per day",
             "Auto-archive old tasks",
@@ -59,19 +60,19 @@ const APPS = [
         ],
         platforms: ["iOS"],
         appStoreUrl: "https://apps.apple.com/us/app/tomorrow-optimized-to-do-list/id1533441215",
-        websiteUrl: "#",
         featured: false
     },
     {
         slug: "persona",
         name: "Persona",
         tagline: "MBTI Growth",
+        accent: "linear-gradient(135deg, #ec4899, #a855f7)",
         bullets: [
             "Discover your type",
             "Daily growth tips",
             "Mood tracking"
         ],
-        description: "Personality tracker and growth companion built on the MBTI framework—take the quiz, track moods, and follow daily micro-transformations tailored to your type.",
+        description: "Personality tracker and growth companion built on the MBTI framework — take the quiz, track moods, and follow daily micro-transformations tailored to your type.",
         icon: "assets/persona-logo.webp",
         screenshots: [
             "assets/persona-screenshot-1.webp",
@@ -80,19 +81,19 @@ const APPS = [
         ],
         platforms: ["iOS"],
         appStoreUrl: "https://apps.apple.com/us/app/persona-mbti-growth-mastery/id6745158056",
-        websiteUrl: "#",
         featured: false
     },
     {
         slug: "contactsweeper",
         name: "ContactSweeper",
         tagline: "Utility",
+        accent: "linear-gradient(135deg, #3b82f6, #06b6d4)",
         bullets: [
             "Swipe to clean",
             "Merge duplicates",
             "Backup contacts"
         ],
-        description: "Clean and organize your contacts in minutes. Dedupe contacts, merge safely, and keep your address book spotless—all on-device for your privacy.",
+        description: "Clean and organize your contacts in minutes. Dedupe contacts, merge safely, and keep your address book spotless — all on-device for your privacy.",
         icon: "assets/contactsweeper-logo.webp",
         screenshots: [
             "assets/contactsweeper-screenshot-1.webp",
@@ -101,12 +102,12 @@ const APPS = [
         ],
         platforms: ["iOS"],
         appStoreUrl: "https://apps.apple.com/us/app/contactsweeper-clean-merge/id6749838639",
-        websiteUrl: "#",
         featured: false
     }
 ];
 
 const SOCIALS = {
     email: "mailto:russellongdev@gmail.com",
-    linkedin: "https://linkedin.com/in/russellry"
+    linkedin: "https://linkedin.com/in/russellry",
+    appstore: "https://apps.apple.com/us/developer/russell-ong/id1533441487"
 };

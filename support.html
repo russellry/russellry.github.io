@@ -3,63 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support – Russell Ong Apps</title>
+    <title>Support — Russell Ong Apps</title>
+    <meta name="description" content="Get help with any of Russell Ong's iOS applications.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/custom.css">
 </head>
-<body data-theme="dark">
-    
-    <nav id="main-nav" class="global-nav">
-        <div class="nav-content">
-            <a href="index.html" class="nav-logo" style="font-weight: 600; font-size: 19px; color: var(--text-color);">russellry</a>
+<body>
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">russellry</a>
             <div class="nav-links">
-                <a href="index.html">Back to Portfolio</a>
+                <a href="index.html">← Back to Portfolio</a>
+            </div>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                    <svg id="theme-icon-moon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <svg id="theme-icon-sun" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none;"><circle cx="12" cy="12" r="5" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                </button>
             </div>
         </div>
     </nav>
 
-    <header class="section-padding text-center" style="margin-top: 60px;">
+    <header class="content-page section text-center">
         <div class="container">
-            <h1 class="display-text" style="font-size: 56px; margin-bottom: 8px;">Support</h1>
-            <p style="font-size: 24px; color: #86868b; margin-bottom: 32px; font-weight: 400; letter-spacing: 0.009em;">Need help? I'm here for you.</p>
+            <h1 class="section-title">Support</h1>
+            <p style="font-size:18px;color:var(--text-secondary);margin-top:12px;">Need help? I'm here for you.</p>
         </div>
     </header>
 
-    <main class="section-padding">
-        <div class="container" style="max-width: 800px; margin: 0 auto;">
-            <div class="utility-card" style="padding: 40px;">
-                <p style="font-size: 14px; color: #86868b; margin-bottom: 32px;"><strong>Last Updated:</strong> <span id="lastUpdatedDate">May 21, 2025</span></p>
+    <main class="section" style="padding-top:0;">
+        <div class="container">
+            <div class="content-card">
+                <p style="font-size:13px;color:var(--text-muted);margin-bottom:32px;"><strong>Last Updated:</strong> <span id="lastUpdatedDate">May 21, 2025</span></p>
 
-                <h2 class="display-text" style="font-size: 32px; margin-bottom: 16px;">How to Reach Me</h2>
+                <h2>How to Reach Me</h2>
                 <p>For any questions, issues, or feedback regarding my apps, please email me directly at:</p>
-                <div style="text-align: center; margin: 40px 0;">
-                    <a href="mailto:russellongdev@gmail.com" class="btn btn-primary-pill" style="font-size: 19px; padding: 16px 32px;">russellongdev@gmail.com</a>
+                <div style="text-align:center;margin:32px 0;">
+                    <a href="mailto:russellongdev@gmail.com" class="btn btn-primary" style="font-size:17px;padding:14px 32px;">russellongdev@gmail.com</a>
                 </div>
-                <p style="text-align: center; color: #86868b; font-size: 14px;">Singapore Time (UTC+08:00) — I usually respond <strong>when I can...</strong>.</p>
+                <p style="text-align:center;color:var(--text-muted);font-size:13px;">Singapore Time (UTC+08:00) — I usually respond <strong>when I can...</strong></p>
 
-                <h2 class="display-text" style="font-size: 32px; margin-top: 48px; margin-bottom: 16px;">Before You Email</h2>
+                <h2>Before You Email</h2>
                 <p>To help me assist you as quickly as possible, please include (where relevant):</p>
-                <ul style="padding-left: 24px; margin-bottom: 24px;">
+                <ul>
                     <li><strong>App name & version</strong> (see settings → about)</li>
                     <li><strong>Device model & iOS version</strong></li>
-                    <li><strong>Steps to reproduce</strong> the issue (screenshots or screen‑recordings are gold ✨)</li>
+                    <li><strong>Steps to reproduce</strong> the issue (screenshots or screen-recordings are gold ✨)</li>
                     <li>Your <strong>App Store purchase receipt</strong> (for billing/refund questions)</li>
                 </ul>
 
-                <h2 class="display-text" style="font-size: 32px; margin-top: 48px; margin-bottom: 16px;">Frequently Asked Questions</h2>
-                <div style="margin-bottom: 24px;">
-                    <p style="margin-bottom: 16px;"><strong>🛠 Bug Reports</strong><br/>I love squashing bugs. Send the steps and I'll aim to patch them in the next update.</p>
-                    <p style="margin-bottom: 16px;"><strong>💳 Billing & Subscriptions</strong><br/>All payments are handled securely by Apple. For refunds, start with <a href="https://support.apple.com/en-us/HT204084" target="_blank" rel="noopener noreferrer">Apple's refund request page</a>. If you get stuck, email me and I'll guide you.</p>
-                    <p style="margin-bottom: 16px;"><strong>🔐 Privacy Questions</strong><br/>See the <a href="privacy.html">Privacy Policy</a>. Still unsure? Drop me a line.</p>
-                    <p style="margin-bottom: 16px;"><strong>🌟 Feature Requests</strong><br/>I'm always collecting ideas. Tell me why the feature matters to you (use‑case, pain point) and it'll go straight to the roadmap.</p>
-                </div>
+                <h2>Frequently Asked Questions</h2>
+                <p><strong>🛠 Bug Reports</strong><br>I love squashing bugs. Send the steps and I'll aim to patch them in the next update.</p>
+                <p><strong>💳 Billing & Subscriptions</strong><br>All payments are handled securely by Apple. For refunds, start with <a href="https://support.apple.com/en-us/HT204084" target="_blank" rel="noopener noreferrer">Apple's refund request page</a>. If you get stuck, email me and I'll guide you.</p>
+                <p><strong>🔐 Privacy Questions</strong><br>See the <a href="privacy.html">Privacy Policy</a>. Still unsure? Drop me a line.</p>
+                <p><strong>🌟 Feature Requests</strong><br>I'm always collecting ideas. Tell me why the feature matters to you (use-case, pain point) and it'll go straight to the roadmap.</p>
 
-                <h2 class="display-text" style="font-size: 32px; margin-top: 48px; margin-bottom: 16px;">Quick Troubleshooting</h2>
-                <ul style="padding-left: 24px; margin-bottom: 24px;">
-                    <li>Force‑quit & relaunch the app.</li>
-                    <li>Ensure you’re on the <strong>latest version</strong> from the App Store.</li>
+                <h2>Quick Troubleshooting</h2>
+                <ul>
+                    <li>Force-quit & relaunch the app.</li>
+                    <li>Ensure you're on the <strong>latest version</strong> from the App Store.</li>
                     <li>Restart your device to clear cached issues.</li>
                     <li>Still broken? Email me with the details above.</li>
                 </ul>
@@ -67,17 +72,32 @@
         </div>
     </main>
 
-    <footer class="site-footer">
-        <div class="container text-center">
+    <footer class="footer">
+        <div class="container">
             <p>&copy; <span id="currentYearFooter"></span> Russell Ong. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'light' || (!saved && !prefersDark)) {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+        function updateIcons() {
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+            document.getElementById('theme-icon-moon').style.display = isLight ? 'none' : 'block';
+            document.getElementById('theme-icon-sun').style.display = isLight ? 'block' : 'none';
+        }
+        updateIcons();
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+            document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            updateIcons();
+        });
         document.getElementById("currentYearFooter").textContent = new Date().getFullYear();
-        const today = new Date();
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById("lastUpdatedDate").textContent = today.toLocaleDateString('en-US', options);
+        document.getElementById("lastUpdatedDate").textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     </script>
 </body>
 </html>
