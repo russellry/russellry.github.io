@@ -20,14 +20,14 @@ function initFeaturedSpotlight() {
     if (!featuredApp || !featuredContainer) return;
 
     const html = `
-        <div class="product-tile product-tile-dark photo-shadow" style="border-radius: 24px; display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; max-width: 1100px; margin: 0 auto; background-color: var(--tile-1); overflow: hidden; position: relative;">
+        <div class="featured-hero product-tile-dark photo-shadow">
             
             <!-- Text Content Side -->
-            <div style="flex: 1 1 400px; padding: 60px 40px; text-align: left; z-index: 2;">
+            <div class="featured-hero-content">
                 <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
-                    <img src="${featuredApp.icon}" style="width: 72px; height: 72px; border-radius: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.3);" alt="Icon">
+                    <img src="${featuredApp.icon}" class="featured-app-icon" alt="Icon">
                     <div>
-                        <div style="color: var(--focus-blue); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">
+                        <div class="subtext-caps">
                             Featured App
                         </div>
                         <h2 class="display-text" style="font-size: 40px; line-height: 1;">
@@ -36,7 +36,7 @@ function initFeaturedSpotlight() {
                     </div>
                 </div>
                 
-                <p style="font-size: 20px; color: var(--text-color); opacity: 0.8; margin-bottom: 32px; font-weight: 400; line-height: 1.4;">
+                <p style="font-size: 20px; opacity: 0.8; margin-bottom: 32px; font-weight: 400; line-height: 1.4;">
                     ${featuredApp.description}
                 </p>
                 
@@ -53,22 +53,21 @@ function initFeaturedSpotlight() {
                 <div style="display: flex; flex-direction: column; gap: 16px;">
                     ${featuredApp.bullets.map(bullet => `
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="background: rgba(0, 113, 227, 0.2); padding: 6px; border-radius: 50%;">
+                            <div class="bullet-icon-wrapper">
                                 <svg width="16" height="16" style="color: var(--focus-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                             </div>
-                            <span style="font-size: 15px; font-weight: 500; color: var(--text-color); opacity: 0.9;">${bullet}</span>
+                            <span style="font-size: 15px; font-weight: 500; opacity: 0.9;">${bullet}</span>
                         </div>
                     `).join('')}
                 </div>
             </div>
 
             <!-- Carousel Visual Side -->
-            <div style="flex: 1 1 300px; padding: 40px; display: flex; justify-content: center; align-items: center; position: relative;">
-                <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(0, 113, 227, 0.15) 0%, transparent 70%);"></div>
-                <div style="position: relative; width: 100%; max-width: 320px; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);" class="group">
+            <div class="featured-hero-visual">
+                <div class="device-frame group">
                     <div style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;" class="no-scrollbar" id="spotlight-carousel">
                         ${featuredApp.screenshots.map((src, idx) => `
-                            <img src="${src}" alt="${featuredApp.name} Screenshot ${idx + 1}" style="width: 100%; height: auto; scroll-snap-align: center; flex-shrink: 0; display: block;" loading="lazy">
+                            <img src="${src}" alt="${featuredApp.name} Screenshot ${idx + 1}" style="scroll-snap-align: center; flex-shrink: 0;" loading="lazy">
                         `).join('')}
                     </div>
                 </div>
