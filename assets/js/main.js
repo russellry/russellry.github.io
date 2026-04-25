@@ -21,7 +21,7 @@ function initFeaturedSpotlight() {
 
     // Based on the Apple standard product-tile
     const html = `
-        <div class="product-tile product-tile-dark" style="border-radius: 18px; padding: 40px; display: flex; flex-direction: column; align-items: center; max-width: 1000px; margin: 0 auto; gap: 40px;">
+        <div class="product-tile product-tile-dark photo-shadow" style="border-radius: 18px; padding: 40px; display: flex; flex-direction: column; align-items: center; max-width: 1000px; margin: 0 auto; gap: 40px; background-color: var(--tile-1);">
             <div style="text-align: center; max-width: 600px;">
                 <div style="color: var(--focus-blue); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
                     Featured App
@@ -29,14 +29,14 @@ function initFeaturedSpotlight() {
                 <h2 class="display-text" style="font-size: 56px; margin-bottom: 16px;">
                     ${featuredApp.name}
                 </h2>
-                <p style="font-size: 24px; color: #86868b; margin-bottom: 24px; font-weight: 400; line-height: 1.16667;">
+                <p style="font-size: 24px; color: var(--text-color); opacity: 0.8; margin-bottom: 24px; font-weight: 400; line-height: 1.16667;">
                     ${featuredApp.description}
                 </p>
                 <div style="display: flex; gap: 16px; justify-content: center; margin-bottom: 32px;">
                     <a href="${featuredApp.appStoreUrl}" target="_blank" class="btn btn-primary-pill">
                         Download on App Store
                     </a>
-                    <a href="#contact" class="btn btn-link" style="color: var(--pure-white);">
+                    <a href="#contact" class="btn btn-link" style="color: var(--text-color);">
                         Learn More
                     </a>
                 </div>
@@ -46,7 +46,7 @@ function initFeaturedSpotlight() {
                     ${featuredApp.bullets.map(bullet => `
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <svg width="20" height="20" style="color: var(--focus-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                            <span style="font-size: 14px; font-weight: 600; color: var(--pure-white);">${bullet}</span>
+                            <span style="font-size: 14px; font-weight: 600; color: var(--text-color);">${bullet}</span>
                         </div>
                     `).join('')}
                 </div>

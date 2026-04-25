@@ -48,6 +48,12 @@
   padding: 0;
 }
 
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 html {
   scroll-behavior: smooth;
   font-family: var(--font-text);
@@ -228,8 +234,11 @@ a:hover {
 }
 
 .product-tile-dark {
-  background-color: var(--pure-black);
-  color: var(--parchment);
+  --bg-color: var(--pure-black);
+  --text-color: var(--parchment);
+  --link-color: var(--sky-link-blue);
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 .utility-card {
