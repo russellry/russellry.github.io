@@ -1,38 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Portfolio of Russell Ong, an indie iOS developer crafting thoughtful and premium applications.">
+    <meta name="description" content="Portfolio of Russell Ong, an indie iOS developer crafting thoughtful and premium applications.">
 
     <title>Russell Ong - iOS Developer</title>
-
-    <!-- Tailwind CSS (CDN) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        'apple-gray': '#f5f5f7',
-                        'apple-dark': '#1d1d1f',
-                        'apple-blue': '#0071e3',
-                    }
-                }
-            }
-        }
-    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/custom.css">
@@ -41,164 +19,130 @@
     <script src="assets/js/data.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
+<body>
 
-<body
-    class="bg-apple-gray dark:bg-black text-apple-dark dark:text-apple-gray antialiased transition-colors duration-300">
+    <!-- Global Navigation -->
+    <nav id="main-nav" class="global-nav">
+        <div class="nav-content">
+            <a href="#" class="nav-logo" style="font-weight: 600; font-size: 19px; color: var(--text-color);">russellry</a>
 
-    <!-- Sticky Nav -->
-    <nav id="main-nav" class="fixed top-0 w-full z-50 glass transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-            <a href="#" class="text-lg font-semibold tracking-tight hover:opacity-70 transition-opacity">
-                russellry
-            </a>
-
-            <div class="flex items-center gap-6 md:gap-8 text-sm font-medium text-gray-600 dark:text-gray-300">
-                <a href="#work" class="hover:text-apple-blue transition-colors hidden sm:block">Apps</a>
-                <a href="#about" class="hover:text-apple-blue transition-colors hidden sm:block">About</a>
-                <a href="#contact" class="hover:text-apple-blue transition-colors hidden sm:block">Contact</a>
+            <div class="nav-links">
+                <a href="#work">Apps</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
 
                 <!-- Dark Mode Toggle -->
-                <button id="theme-toggle"
-                    class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
-                    aria-label="Toggle Dark Mode">
-                    <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                        </path>
-                    </svg>
-                    <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
-                        </path>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                    <svg class="icon-light" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                     </svg>
                 </button>
 
-                <a href="#work"
-                    class="px-4 py-1.5 bg-apple-dark dark:bg-white text-white dark:text-black rounded-full text-xs font-semibold hover:opacity-90 transition-opacity">
-                    View Apps
-                </a>
+                <a href="#work" class="btn-dark-utility" style="padding: 4px 12px; border-radius: 980px;">View Apps</a>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="bg-noise pt-32 pb-20">
-
+    <main>
         <!-- Hero Section -->
-        <section class="max-w-4xl mx-auto px-6 text-center mb-32 reveal">
-            <h1
-                class="text-5xl md:text-7xl font-bold tracking-tighter mb-6 bg-gradient-to-br from-black to-gray-600 dark:from-white dark:to-gray-500 bg-clip-text text-transparent pb-2">
-                Crafting thoughtful<br>iOS experiences.
-            </h1>
-            <p
-                class="text-xl md:text-2xl text-gray-500 dark:text-gray-400 font-medium max-w-2xl mx-auto mb-10 leading-relaxed">
-                I build apps that feel native, respect your privacy, and help you get more out of your day.
-            </p>
-            <div class="flex items-center justify-center gap-4">
-                <a href="#work"
-                    class="px-8 py-3 bg-apple-blue text-white font-semibold rounded-full hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/30 hover-lift">
-                    See My Work
-                </a>
-                <a href="#contact"
-                    class="px-8 py-3 text-apple-blue font-medium hover:bg-blue-50 dark:hover:bg-white/10 rounded-full transition-colors hover-lift">
-                    Contact Me
-                </a>
+        <section class="section-padding text-center" style="margin-top: 60px;">
+            <div class="container reveal">
+                <h1 class="display-text" style="font-size: 56px; margin-bottom: 8px;">
+                    Crafting thoughtful<br>iOS experiences.
+                </h1>
+                <p style="font-size: 24px; color: #86868b; margin-bottom: 32px; font-weight: 400; letter-spacing: 0.009em;">
+                    I build apps that feel native, respect your privacy, and help you get more out of your day.
+                </p>
+                <div style="display: flex; gap: 16px; justify-content: center; align-items: center;">
+                    <a href="#work" class="btn btn-primary-pill">
+                        See My Work
+                    </a>
+                    <a href="#contact" class="btn btn-link">
+                        Contact Me
+                    </a>
+                </div>
             </div>
         </section>
 
         <!-- Spotlight Section (Injection Target) -->
-        <section id="work" class="max-w-7xl mx-auto px-6 mb-32 reveal delay-100">
-            <div id="featured-container">
+        <section id="work" class="section-padding" style="background-color: var(--tile-1); color: var(--parchment);">
+            <div class="container reveal delay-100" id="featured-container">
                 <!-- Data injected via main.js -->
             </div>
         </section>
 
         <!-- More Apps Grid (Injection Target) -->
-        <section class="max-w-7xl mx-auto px-6 mb-32 reveal delay-200">
-            <div class="flex items-center justify-between mb-12">
-                <h2 class="text-3xl font-bold tracking-tight">More Apps</h2>
-                <a href="https://apps.apple.com/us/developer/russell-ong/id1533441487"
-                    class="text-apple-blue text-sm font-semibold hover:underline flex items-center gap-1">
-                    View App Store Profile <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                    </svg>
-                </a>
-            </div>
+        <section class="section-padding" style="background-color: var(--bg-color);">
+            <div class="container reveal delay-200">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 class="display-text" style="font-size: 40px;">More Apps</h2>
+                    <a href="https://apps.apple.com/us/developer/russell-ong/id1533441487" class="btn btn-link" style="font-size: 14px;">
+                        View App Store Profile
+                    </a>
+                </div>
 
-            <div id="app-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <!-- Data injected via main.js -->
+                <div id="app-grid" class="app-grid">
+                    <!-- Data injected via main.js -->
+                </div>
             </div>
         </section>
 
         <!-- About Section -->
-        <section id="about" class="max-w-4xl mx-auto px-6 mb-32 reveal delay-300">
-            <div
-                class="bg-gray-100/50 dark:bg-white/5 rounded-3xl p-8 md:p-12 border border-gray-200/50 dark:border-white/5 backdrop-blur-sm">
-                <h2 class="text-3xl font-bold tracking-tight mb-6">About Me</h2>
-                <div class="prose prose-lg dark:prose-invert text-gray-500 dark:text-gray-400">
-                    <p class="mb-4">
-                        Hello! I'm Russell, an indie iOS developer passionate about creating software that feels human.
-                        My journey started with a simple curiosity about how the apps on my phone worked, and it has
-                        evolved into a full-time pursuit of craftsmanship in code.
+        <section id="about" class="section-padding" style="background-color: var(--pure-white);">
+            <div class="container reveal delay-300">
+                <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                    <h2 class="display-text" style="font-size: 48px; margin-bottom: 24px;">About Me</h2>
+                    <p style="font-size: 21px; line-height: 1.381002381; font-weight: 400; letter-spacing: 0.011em; color: #86868b; margin-bottom: 40px;">
+                        Hello! I'm Russell, an indie iOS developer passionate about creating software that feels human. My journey started with a simple curiosity about how the apps on my phone worked, and it has evolved into a full-time pursuit of craftsmanship in code.
                     </p>
-                    <p class="mb-8">
-                        I believe in the "Apple way" of doing things— sweating the small details, prioritizing user
-                        privacy, and ensuring that animations feel fluid and natural. When I'm not coding, I'm analyzing
-                        improved workflows or exploring the latest Swift APIs.
+                    <p style="font-size: 21px; line-height: 1.381002381; font-weight: 400; letter-spacing: 0.011em; color: #86868b; margin-bottom: 40px;">
+                        I believe in the "Apple way" of doing things— sweating the small details, prioritizing user privacy, and ensuring that animations feel fluid and natural.
                     </p>
+                    
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 40px;">
+                        <span class="btn-white-capsule" style="border: 1px solid var(--nav-border);"> Privacy First Design </span>
+                        <span class="btn-white-capsule" style="border: 1px solid var(--nav-border);"> Native Swift & SwiftUI </span>
+                        <span class="btn-white-capsule" style="border: 1px solid var(--nav-border);"> Accessibility Included </span>
+                        <span class="btn-white-capsule" style="border: 1px solid var(--nav-border);"> Zero Bloatware </span>
+                    </div>
                 </div>
-
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Core Principles</h3>
-                <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <li class="flex items-center gap-3 text-sm font-medium text-gray-600 dark:text-gray-300">
-                        <span class="w-2 h-2 rounded-full bg-green-500"></span> Privacy First Design
-                    </li>
-                    <li class="flex items-center gap-3 text-sm font-medium text-gray-600 dark:text-gray-300">
-                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> Native Swift & SwiftUI
-                    </li>
-                    <li class="flex items-center gap-3 text-sm font-medium text-gray-600 dark:text-gray-300">
-                        <span class="w-2 h-2 rounded-full bg-purple-500"></span> Accessibility Included
-                    </li>
-                    <li class="flex items-center gap-3 text-sm font-medium text-gray-600 dark:text-gray-300">
-                        <span class="w-2 h-2 rounded-full bg-orange-500"></span> Zero Bloatware
-                    </li>
-                </ul>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="max-w-3xl mx-auto px-6 text-center reveal delay-300">
-            <h2 class="text-4xl font-bold tracking-tight mb-6">Let's Connect</h2>
-            <p class="text-xl text-gray-500 dark:text-gray-400 mb-10">
-                Have a question, a bug report, or just want to chat about SwiftUI?
-            </p>
+        <section id="contact" class="section-padding text-center" style="background-color: var(--parchment);">
+            <div class="container reveal delay-300">
+                <h2 class="display-text" style="font-size: 48px; margin-bottom: 16px;">Let's Connect</h2>
+                <p style="font-size: 21px; color: #86868b; margin-bottom: 40px;">
+                    Have a question, a bug report, or just want to chat about SwiftUI?
+                </p>
 
-            <div
-                class="bg-white dark:bg-[#1c1c1e] rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-white/5">
-                <form action="mailto:russellongdev@gmail.com" method="GET" class="space-y-4 max-w-md mx-auto text-left"
-                    enctype="text/plain">
-                    <!-- Simple Mailto Wrapper for Static Site -->
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Send me an email</label>
-                        <a href="mailto:russellongdev@gmail.com"
-                            class="block w-full text-center px-4 py-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-apple-blue transition-colors text-apple-blue font-semibold hover-lift">
+                <div class="utility-card" style="max-width: 400px; margin: 0 auto; text-align: left;">
+                    <form action="mailto:russellongdev@gmail.com" method="GET" enctype="text/plain" style="display: flex; flex-direction: column; gap: 16px;">
+                        <label style="font-weight: 600; font-size: 12px; color: #86868b; text-transform: uppercase;">Send me an email</label>
+                        <a href="mailto:russellongdev@gmail.com" class="btn btn-primary-pill" style="width: 100%; text-align: center; border-radius: 8px;">
                             russellongdev@gmail.com
                         </a>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Simple Footer -->
-    <footer class="py-10 text-center border-t border-gray-200 dark:border-white/10">
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-            &copy; <span id="year"></span> Russell Ong. Built with ☕️ and Swift.
-        </p>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>
+                &copy; <span id="year"></span> Russell Ong. Built with ☕️ and Swift.
+            </p>
+            <p style="margin-top: 8px;">
+                <a href="privacy.html" style="color: inherit; text-decoration: underline; margin-right: 16px;">Privacy Policy</a>
+                <a href="support.html" style="color: inherit; text-decoration: underline;">Support</a>
+            </p>
+        </div>
     </footer>
 
 </body>
-
 </html>
