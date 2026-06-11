@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Russell Ong — indie iOS developer crafting thoughtful, privacy-first apps. Explore my portfolio of App Store applications.">
+    <meta name="description" content="Russell Ong builds privacy-conscious iOS apps from Singapore. Explore App Store releases, support, and privacy details.">
 
-    <title>Russell Ong — iOS Developer</title>
+    <title>Russell Ong - Privacy-Conscious iOS Apps</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/treasure-life-logo.webp" type="image/webp">
 
-    <!-- CSS -->
     <link rel="stylesheet" href="assets/css/custom.css">
 
-    <!-- Data & Scripts -->
     <script src="assets/js/data.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-    <!-- Navigation -->
-    <nav class="nav" id="main-nav">
+    <nav class="nav" id="main-nav" aria-label="Primary navigation">
         <div class="nav-inner">
-            <a href="#" class="nav-logo">russellry</a>
+            <a href="#top" class="nav-logo" aria-label="Russell Ong home">
+                <span class="nav-logo-mark" aria-hidden="true">RO</span>
+                <span>russellry</span>
+            </a>
 
             <div class="nav-links" id="nav-links">
                 <a href="#work">Apps</a>
@@ -33,140 +34,184 @@
             </div>
 
             <div class="nav-actions">
-                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-                    <svg id="theme-icon-moon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg id="theme-icon-sun" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none;"><circle cx="12" cy="12" r="5" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle color theme" type="button">
+                    <svg id="theme-icon-moon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    <svg id="theme-icon-sun" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style="display:none;"><circle cx="12" cy="12" r="5" stroke-width="2"></circle><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
                 </button>
-                <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+                <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button">
                     <span></span><span></span><span></span>
                 </button>
             </div>
         </div>
-        <div class="nav-overlay" id="nav-overlay"></div>
     </nav>
 
-    <main>
-        <!-- Hero -->
-        <section class="hero" id="hero">
-            <div class="hero-glow"></div>
-            <div class="hero-content reveal">
-                <h1 class="hero-title">
-                    Crafting thoughtful<br><span class="gradient-text">iOS experiences.</span>
-                </h1>
-                <p class="hero-subtitle">
-                    I build apps that feel native, respect your privacy, and help you get more out of your day.
-                </p>
-                <div class="hero-ctas">
-                    <a href="#work" class="btn btn-primary">See My Work</a>
-                    <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+    <main id="main">
+        <section class="hero" id="top">
+            <div class="hero-media" aria-hidden="true">
+                <img class="hero-shot" src="assets/treasure-life-screenshot-1.webp" alt="">
+                <img class="hero-shot" src="assets/persona-screenshot-1.webp" alt="">
+                <img class="hero-shot" src="assets/contactsweeper-screenshot-1.webp" alt="">
+                <img class="hero-shot" src="assets/riskm-screenshot-1.webp" alt="">
+                <img class="hero-shot" src="assets/tomorrow-screenshot-1.webp" alt="">
+            </div>
+
+            <div class="container hero-inner reveal">
+                <div class="hero-copy">
+                    <span class="eyebrow">Independent App Studio</span>
+                    <h1 class="hero-title">Russell Ong</h1>
+                    <p class="hero-subtitle">
+                        I design and ship focused iOS apps that stay useful, respect your data, and feel native from the first tap.
+                    </p>
+                    <div class="hero-actions" aria-label="Primary actions">
+                        <a href="#work" class="btn btn-primary">Explore Apps</a>
+                        <a href="support.html" class="btn btn-secondary">Get Support</a>
+                    </div>
+                    <div class="hero-meta" aria-label="Studio highlights">
+                        <span>Swift and SwiftUI</span>
+                        <span>Privacy-conscious by default</span>
+                        <span>Built in Singapore</span>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Featured App -->
+        <section class="studio-strip" aria-label="Portfolio summary">
+            <div class="container studio-strip-grid">
+                <div class="studio-strip-item">
+                    <strong>5</strong>
+                    <span>Published App Store projects across memory, productivity, finance, personality, and contacts.</span>
+                </div>
+                <div class="studio-strip-item">
+                    <strong>0</strong>
+                    <span>Default server dependency for core app data where on-device workflows make sense.</span>
+                </div>
+                <div class="studio-strip-item">
+                    <strong>1</strong>
+                    <span>Direct support inbox and a consolidated privacy policy for the full app portfolio.</span>
+                </div>
+            </div>
+        </section>
+
         <section id="work" class="section">
             <div class="container">
-                <div class="section-header center reveal">
-                    <span class="section-label">✦ Featured</span>
-                    <h2 class="section-title">Spotlight</h2>
+                <div class="section-header split reveal">
+                    <div>
+                        <span class="eyebrow">App Store</span>
+                        <h2 class="section-title">Small apps, built with a point of view.</h2>
+                    </div>
+                    <p class="section-kicker">
+                        Each app solves a narrow job without turning into a kitchen sink. The common thread is clear interface craft, private-first defaults, and a bias toward native platform behavior.
+                    </p>
                 </div>
-                <div class="reveal delay-1" id="featured-container">
-                    <!-- Injected by main.js -->
-                </div>
+
+                <div id="featured-container" class="reveal delay-1"></div>
             </div>
         </section>
 
-        <!-- App Grid -->
-        <section class="section">
+        <section class="section tight">
             <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-label">All Apps</span>
-                    <h2 class="section-title">More from the workshop</h2>
+                <div class="section-header split reveal">
+                    <div>
+                        <span class="eyebrow">Catalog</span>
+                        <h2 class="section-title">From the workshop.</h2>
+                    </div>
+                    <p class="section-kicker">
+                        A quick scan of the current portfolio. Open an App Store listing for full screenshots, release notes, and platform availability.
+                    </p>
                 </div>
-                <div id="app-grid" class="app-grid">
-                    <!-- Injected by main.js -->
-                </div>
-                <div class="text-center reveal delay-2" style="margin-top: 40px;">
-                    <a href="https://apps.apple.com/us/developer/russell-ong/id1533441487" target="_blank" class="btn btn-ghost" style="font-size: 15px;">
-                        View All on App Store
+
+                <div id="app-grid" class="app-grid"></div>
+
+                <div class="text-center section-action reveal delay-2">
+                    <a href="https://apps.apple.com/us/developer/russell-ong/id1533441487" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                        View Developer Page
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- About -->
         <section id="about" class="section">
             <div class="container">
                 <div class="about-grid">
-                    <div class="about-text reveal">
-                        <span class="section-label">About</span>
-                        <h2 class="section-title" style="margin-bottom: 24px;">Built by hand,<br>with care.</h2>
+                    <div class="about-copy reveal">
+                        <span class="eyebrow">About</span>
+                        <h2 class="section-title">A developer who likes tidy products.</h2>
                         <p>
-                            Hello! I'm Russell, an indie iOS developer passionate about creating software that feels human. My journey started with a simple curiosity about how the apps on my phone worked, and it has evolved into a full-time pursuit of craftsmanship in code.
+                            I am Russell, an indie iOS developer building apps around real personal workflows: remembering meaningful moments, planning tomorrow, understanding trades, organizing contacts, and making personality growth feel practical.
                         </p>
                         <p>
-                            I believe in the "Apple way" of doing things — sweating the small details, prioritizing user privacy, and ensuring that animations feel fluid and natural.
+                            My taste leans toward apps that do the work quietly. Good defaults, readable screens, fast local data, accessibility, and fewer surprise permissions matter more than novelty for its own sake.
                         </p>
                         <div class="about-values">
-                            <span class="value-tag">Privacy First</span>
-                            <span class="value-tag">Native Swift & SwiftUI</span>
+                            <span class="value-tag">Native Swift</span>
+                            <span class="value-tag">SwiftUI</span>
+                            <span class="value-tag">On-device data</span>
                             <span class="value-tag">Accessibility</span>
-                            <span class="value-tag">Zero Bloatware</span>
-                            <span class="value-tag">Indie Made</span>
+                            <span class="value-tag">Indie-made</span>
                         </div>
                     </div>
-                    <div class="about-visual reveal delay-2">
-                        <div class="about-card">
-                            <span class="about-card-emoji">🛠</span>
-                            <div class="about-card-stat">5</div>
-                            <div class="about-card-label">Apps on the App Store</div>
-                        </div>
-                    </div>
+
+                    <ul class="principle-list reveal delay-2" aria-label="Development principles">
+                        <li>
+                            <span class="principle-number">1</span>
+                            <p><strong>Keep the job obvious.</strong> Screens should make the next useful action clear without turning the app into a manual.</p>
+                        </li>
+                        <li>
+                            <span class="principle-number">2</span>
+                            <p><strong>Let privacy shape the architecture.</strong> Local-first data is not a slogan; it changes what gets built and what gets avoided.</p>
+                        </li>
+                        <li>
+                            <span class="principle-number">3</span>
+                            <p><strong>Polish the repeated moments.</strong> The interactions people use every day deserve the most attention.</p>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- Contact -->
         <section id="contact" class="section">
             <div class="container">
-                <div class="contact-inner reveal">
-                    <span class="section-label">Contact</span>
-                    <h2 class="section-title">Let's connect</h2>
-                    <p class="contact-desc">
-                        Have a question, a bug report, or just want to chat about SwiftUI?
-                    </p>
-                    <div class="contact-card">
-                        <div class="contact-email-label">Send me an email</div>
-                        <a href="mailto:russellongdev@gmail.com" class="btn btn-primary" style="width: 100%; border-radius: 12px;">
-                            russellongdev@gmail.com
-                        </a>
+                <div class="contact-panel reveal">
+                    <div class="contact-copy">
+                        <span class="eyebrow">Contact</span>
+                        <h2 class="section-title">Bugs, ideas, support, or SwiftUI chat.</h2>
+                        <p>
+                            Send app support questions, product feedback, or anything else directly by email. I read support notes myself.
+                        </p>
+                        <div class="contact-actions">
+                            <a href="mailto:russellongdev@gmail.com" class="btn btn-primary">Email Russell</a>
+                            <a href="support.html" class="btn btn-secondary">Support Page</a>
+                        </div>
+                        <div class="social-links" aria-label="Social links">
+                            <a href="mailto:russellongdev@gmail.com" class="social-link" aria-label="Email Russell">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            </a>
+                            <a href="https://linkedin.com/in/russellry" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn profile">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg>
+                            </a>
+                            <a href="https://apps.apple.com/us/developer/russell-ong/id1533441487" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Russell Ong on the App Store">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"></path></svg>
+                            </a>
+                        </div>
                     </div>
-                    <div class="social-links" style="margin-top: 32px;">
-                        <a href="mailto:russellongdev@gmail.com" class="social-link" aria-label="Email">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                        </a>
-                        <a href="https://linkedin.com/in/russellry" target="_blank" class="social-link" aria-label="LinkedIn">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                        </a>
-                        <a href="https://apps.apple.com/us/developer/russell-ong/id1533441487" target="_blank" class="social-link" aria-label="App Store">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                        </a>
+
+                    <div class="contact-note">
+                        <strong>Support stays direct.</strong>
+                        <p>One developer, one inbox, and enough context to fix what is broken or sharpen what is next.</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <p>&copy; <span id="year"></span> Russell Ong. Built with ☕️ and Swift.</p>
+        <div class="container footer-inner">
+            <p>&copy; <span id="year"></span> Russell Ong. Built for the App Store.</p>
             <div class="footer-links">
                 <a href="privacy.html">Privacy Policy</a>
                 <a href="support.html">Support</a>
             </div>
         </div>
     </footer>
-
 </body>
 </html>

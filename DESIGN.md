@@ -1,42 +1,50 @@
-# Design System: "Craft"
+# Design System: App Lab
 
-A warm, confident, modern design system for russellry.github.io.
+A sharp, editorial portfolio system for `russellry.github.io`, built around real app screenshots and concise product information.
 
 ## Color Palette
 
 | Token | Value | Role |
 |-------|-------|------|
-| `--bg` | `#0a0a0f` | Page background |
-| `--surface` | `#141419` | Elevated cards |
-| `--surface-2` | `#1a1a22` | Secondary surfaces |
-| `--border` | `#1e1e26` | Subtle separators |
-| `--text` | `#f0f0f5` | Primary text |
-| `--text-secondary` | `#8a8a9a` | Muted labels |
-| `--text-muted` | `#55556a` | Tertiary text |
-| `--accent` | `#6366f1` | Indigo primary CTA |
-| `--accent-2` | `#a78bfa` | Violet highlights |
-| `--gradient` | `135deg #6366f1 → #a78bfa` | Signature gradient |
+| `--bg` | `#f6f8f3` | Page background |
+| `--surface` | `#ffffff` | Cards and document surfaces |
+| `--surface-soft` | `#eef4ec` | Secondary panels |
+| `--surface-ink` | `#121512` | High-contrast blocks and buttons |
+| `--border` | `#d8e0d4` | Separators |
+| `--text` | `#111411` | Primary text |
+| `--text-secondary` | `#515b50` | Body copy |
+| `--accent` | `#156f5b` | Product accent |
+| `--accent-warm` | `#ff5a45` | Warm marker |
+| `--accent-cool` | `#2f7ed8` | Cool marker |
+| `--accent-lime` | `#c9ff65` | Brand badge |
 
-Light mode swaps `--bg` to `#f5f5f7`, `--surface` to `#ffffff`, etc.
+Dark mode swaps the same roles into a deep green/ink palette.
 
 ## Typography
 
-- **Display**: `"Outfit", sans-serif` — headings, hero text
-- **Body**: `"Inter", sans-serif` — paragraphs, UI text
-- Letter-spacing: `-0.03em` (display), default (body)
-- Sizes: 72px hero, 48px section, 28px card, 16px body
+* **Display:** `Fraunces` for editorial headings.
+* **Body:** `Inter` for app copy, navigation, and UI labels.
+* Letter spacing stays at `0`; responsive sizes use fixed breakpoint rules rather than viewport-width font scaling.
 
 ## Components
 
-- **Nav**: Frosted glass, fixed top, hamburger on mobile (≤768px)
-- **Buttons**: Primary (gradient), Secondary (outlined), Ghost (text + arrow)
-- **Cards**: Glass surface, 1px border, hover lift + accent top-bar
-- **Showcase**: Full-width featured app with device frame carousel
-- **Carousel**: Scroll-snap, dot indicators, auto-play, touch support
-- **Scroll Reveal**: Intersection Observer, staggered delays
+* **Nav:** Sticky glassy header with compact mobile menu on the homepage and simplified mobile nav on support/privacy pages.
+* **Hero:** Full-viewport app screenshot collage with Russell's name as the first visual signal.
+* **Showcase:** Featured app panel with screenshot carousel, app icon, bullets, and App Store CTA.
+* **App Cards:** Repeated product cards with app icon, platform tags, screenshot preview, and App Store link.
+* **Content Pages:** Shared document card treatment for support and privacy.
 
-## Responsive Breakpoints
+## Motion
 
-- Desktop: 1024px+
-- Tablet: 768px–1023px
-- Mobile: <768px (hamburger nav, stacked layouts)
+* **Load choreography:** hero copy and navigation settle in with short, soft easing.
+* **Ambient motion:** hero screenshots and the featured device float subtly.
+* **Interaction:** app cards use pointer-aware tilt and shine on desktop, buttons have light press feedback, and carousel dots animate cleanly.
+* **Accessibility:** `prefers-reduced-motion` disables named animations, parallax, tilt, shine, and long transitions.
+
+## Public Surface
+
+The site intentionally focuses on:
+
+* App Store portfolio
+* Support page
+* Privacy policy
