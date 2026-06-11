@@ -5,11 +5,11 @@ const APPS = [
         tagline: "Life & Memories",
         accent: "linear-gradient(135deg, #f59e0b, #ef4444)",
         bullets: [
-            "Capture precious moments",
-            "Organize memories effortlessly",
-            "Private & Secure"
+            "Structured memory capture",
+            "Photo-led organization",
+            "Local-first privacy model"
         ],
-        description: "An intuitive app designed to help you capture, organize, and cherish life's most precious moments. Built with privacy at its core, Treasure Life ensures your memories stay yours.",
+        description: "A memory app built around calm capture flows, readable detail screens, and private organization for personal moments.",
         icon: "assets/treasure-life-logo.webp",
         screenshots: [
             "assets/treasure-life-screenshot-1.webp",
@@ -26,11 +26,11 @@ const APPS = [
         tagline: "Trading Utility",
         accent: "linear-gradient(135deg, #10b981, #06b6d4)",
         bullets: [
-            "Calculate position sizing",
-            "Manage risk per trade",
-            "Real-time calculations"
+            "Position sizing workflow",
+            "Risk-aware inputs",
+            "Fast native calculations"
         ],
-        description: "Take control of your trading decisions. RiskM simplifies calculating share purchases based on your capital, risk percentage, and trade parameters.",
+        description: "A focused trading utility that turns risk, capital, and entry assumptions into quick position-sizing decisions.",
         icon: "assets/riskm-logo.webp",
         screenshots: [
             "assets/riskm-screenshot-1.webp",
@@ -47,11 +47,11 @@ const APPS = [
         tagline: "Focus & Productivity",
         accent: "linear-gradient(135deg, #6366f1, #8b5cf6)",
         bullets: [
-            "One list per day",
-            "Auto-archive old tasks",
-            "Minimalist design"
+            "Daily task reset",
+            "Simple archive model",
+            "Low-friction planning"
         ],
-        description: "A fresh approach to task management. Get a new list each day to power through your tasks and focus on what's most important right now.",
+        description: "A minimal planning app designed around one useful list per day instead of a sprawling task-management system.",
         icon: "assets/tomorrow-logo.webp",
         screenshots: [
             "assets/tomorrow-screenshot-1.webp",
@@ -68,11 +68,11 @@ const APPS = [
         tagline: "MBTI Growth",
         accent: "linear-gradient(135deg, #ec4899, #a855f7)",
         bullets: [
-            "Discover your type",
-            "Daily growth tips",
-            "Mood tracking"
+            "Quiz-led onboarding",
+            "Personalized guidance",
+            "Daily reflection loops"
         ],
-        description: "Personality tracker and growth companion built on the MBTI framework — take the quiz, track moods, and follow daily micro-transformations tailored to your type.",
+        description: "A personality-growth app with onboarding, mood inputs, and practical daily prompts shaped around MBTI-style reflection.",
         icon: "assets/persona-logo.webp",
         screenshots: [
             "assets/persona-screenshot-1.webp",
@@ -89,11 +89,11 @@ const APPS = [
         tagline: "Utility",
         accent: "linear-gradient(135deg, #3b82f6, #06b6d4)",
         bullets: [
-            "Swipe to clean",
-            "Merge duplicates",
-            "Backup contacts"
+            "Contacts permission flow",
+            "Duplicate cleanup tools",
+            "On-device processing"
         ],
-        description: "Clean and organize your contacts in minutes. Dedupe contacts, merge safely, and keep your address book spotless — all on-device for your privacy.",
+        description: "A contacts utility for cleaning duplicate or messy address-book data while keeping processing on the device.",
         icon: "assets/contactsweeper-logo.webp",
         screenshots: [
             "assets/contactsweeper-screenshot-1.webp",

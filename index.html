@@ -3,15 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Russell Ong builds privacy-conscious iOS apps from Singapore. Explore App Store releases, support, and privacy details.">
+    <meta name="description" content="Russell Ong is an iOS app developer building polished Swift and SwiftUI apps from product concept to App Store release.">
 
-    <title>Russell Ong - Privacy-Conscious iOS Apps</title>
+    <title>Russell Ong - iOS App Developer</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" href="assets/treasure-life-logo.webp" type="image/webp">
 
+    <script>
+        (() => {
+            try {
+                const saved = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (saved === 'dark' || (!saved && prefersDark)) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (error) {
+                document.documentElement.removeAttribute('data-theme');
+            }
+        })();
+    </script>
     <link rel="stylesheet" href="assets/css/custom.css">
 
     <script src="assets/js/data.js" defer></script>
@@ -29,7 +42,7 @@
 
             <div class="nav-links" id="nav-links">
                 <a href="#work">Apps</a>
-                <a href="#about">About</a>
+                <a href="#expertise">Expertise</a>
                 <a href="#contact">Contact</a>
             </div>
 
@@ -57,19 +70,19 @@
 
             <div class="container hero-inner reveal">
                 <div class="hero-copy">
-                    <span class="eyebrow">Independent App Studio</span>
+                    <span class="eyebrow">iOS App Developer</span>
                     <h1 class="hero-title">Russell Ong</h1>
                     <p class="hero-subtitle">
-                        I design and ship focused iOS apps that stay useful, respect your data, and feel native from the first tap.
+                        I build native iPhone and iPad apps end to end: product scope, SwiftUI interfaces, local-first architecture, App Store release, and ongoing support.
                     </p>
                     <div class="hero-actions" aria-label="Primary actions">
-                        <a href="#work" class="btn btn-primary">Explore Apps</a>
-                        <a href="support.html" class="btn btn-secondary">Get Support</a>
+                        <a href="#work" class="btn btn-primary">View Apps</a>
+                        <a href="#expertise" class="btn btn-secondary">See Expertise</a>
                     </div>
                     <div class="hero-meta" aria-label="Studio highlights">
                         <span>Swift and SwiftUI</span>
-                        <span>Privacy-conscious by default</span>
-                        <span>Built in Singapore</span>
+                        <span>App Store shipping</span>
+                        <span>Privacy-first architecture</span>
                     </div>
                 </div>
             </div>
@@ -79,15 +92,15 @@
             <div class="container studio-strip-grid">
                 <div class="studio-strip-item">
                     <strong>5</strong>
-                    <span>Published App Store projects across memory, productivity, finance, personality, and contacts.</span>
+                    <span>Published App Store apps across productivity, memory, finance, personality, and contacts.</span>
                 </div>
                 <div class="studio-strip-item">
-                    <strong>0</strong>
-                    <span>Default server dependency for core app data where on-device workflows make sense.</span>
+                    <strong>Native</strong>
+                    <span>Swift and SwiftUI interfaces designed around Apple platform behavior.</span>
                 </div>
                 <div class="studio-strip-item">
-                    <strong>1</strong>
-                    <span>Direct support inbox and a consolidated privacy policy for the full app portfolio.</span>
+                    <strong>End-to-end</strong>
+                    <span>Product decisions, implementation, release, support, and iteration handled directly.</span>
                 </div>
             </div>
         </section>
@@ -96,11 +109,11 @@
             <div class="container">
                 <div class="section-header split reveal">
                     <div>
-                        <span class="eyebrow">App Store</span>
-                        <h2 class="section-title">Small apps, built with a point of view.</h2>
+                        <span class="eyebrow">Released Work</span>
+                        <h2 class="section-title">Apps shipped, maintained, and improved over time.</h2>
                     </div>
                     <p class="section-kicker">
-                        Each app solves a narrow job without turning into a kitchen sink. The common thread is clear interface craft, private-first defaults, and a bias toward native platform behavior.
+                        My portfolio shows the parts that matter in real app development: focused scope, fast native screens, low-permission data handling, and enough polish for people to keep using the product.
                     </p>
                 </div>
 
@@ -112,11 +125,11 @@
             <div class="container">
                 <div class="section-header split reveal">
                     <div>
-                        <span class="eyebrow">Catalog</span>
-                        <h2 class="section-title">From the workshop.</h2>
+                        <span class="eyebrow">Portfolio</span>
+                        <h2 class="section-title">Current App Store projects.</h2>
                     </div>
                     <p class="section-kicker">
-                        A quick scan of the current portfolio. Open an App Store listing for full screenshots, release notes, and platform availability.
+                        Each app is a complete product, not a mockup: real users, store listings, screenshots, support, and ongoing maintenance.
                     </p>
                 </div>
 
@@ -130,39 +143,39 @@
             </div>
         </section>
 
-        <section id="about" class="section">
+        <section id="expertise" class="section">
             <div class="container">
                 <div class="about-grid">
                     <div class="about-copy reveal">
-                        <span class="eyebrow">About</span>
-                        <h2 class="section-title">A developer who likes tidy products.</h2>
+                        <span class="eyebrow">Expertise</span>
+                        <h2 class="section-title">Native app development with product judgment.</h2>
                         <p>
-                            I am Russell, an indie iOS developer building apps around real personal workflows: remembering meaningful moments, planning tomorrow, understanding trades, organizing contacts, and making personality growth feel practical.
+                            I work across the full iOS product loop: defining the narrow job, building the SwiftUI interface, choosing the data model, polishing interactions, preparing App Store assets, and supporting users after release.
                         </p>
                         <p>
-                            My taste leans toward apps that do the work quietly. Good defaults, readable screens, fast local data, accessibility, and fewer surprise permissions matter more than novelty for its own sake.
+                            My strongest work is in practical apps where execution quality matters: clear information hierarchy, reliable local state, accessible controls, and privacy decisions that are reflected in the architecture.
                         </p>
                         <div class="about-values">
                             <span class="value-tag">Native Swift</span>
                             <span class="value-tag">SwiftUI</span>
-                            <span class="value-tag">On-device data</span>
+                            <span class="value-tag">Local data</span>
+                            <span class="value-tag">App Store release</span>
                             <span class="value-tag">Accessibility</span>
-                            <span class="value-tag">Indie-made</span>
                         </div>
                     </div>
 
                     <ul class="principle-list reveal delay-2" aria-label="Development principles">
                         <li>
                             <span class="principle-number">1</span>
-                            <p><strong>Keep the job obvious.</strong> Screens should make the next useful action clear without turning the app into a manual.</p>
+                            <p><strong>Scope before code.</strong> Strong apps start with a clear job, a tight workflow, and fewer features competing for attention.</p>
                         </li>
                         <li>
                             <span class="principle-number">2</span>
-                            <p><strong>Let privacy shape the architecture.</strong> Local-first data is not a slogan; it changes what gets built and what gets avoided.</p>
+                            <p><strong>Build native where it counts.</strong> Navigation, state, gestures, typography, and system affordances should feel at home on iOS.</p>
                         </li>
                         <li>
                             <span class="principle-number">3</span>
-                            <p><strong>Polish the repeated moments.</strong> The interactions people use every day deserve the most attention.</p>
+                            <p><strong>Ship and maintain.</strong> Release quality includes App Store readiness, support paths, privacy clarity, and iteration after launch.</p>
                         </li>
                     </ul>
                 </div>
@@ -174,9 +187,9 @@
                 <div class="contact-panel reveal">
                     <div class="contact-copy">
                         <span class="eyebrow">Contact</span>
-                        <h2 class="section-title">Bugs, ideas, support, or SwiftUI chat.</h2>
+                        <h2 class="section-title">App work, support, or technical conversations.</h2>
                         <p>
-                            Send app support questions, product feedback, or anything else directly by email. I read support notes myself.
+                            Reach out about iOS app development, product feedback, support questions, or a specific App Store project.
                         </p>
                         <div class="contact-actions">
                             <a href="mailto:russellongdev@gmail.com" class="btn btn-primary">Email Russell</a>
@@ -196,8 +209,8 @@
                     </div>
 
                     <div class="contact-note">
-                        <strong>Support stays direct.</strong>
-                        <p>One developer, one inbox, and enough context to fix what is broken or sharpen what is next.</p>
+                        <strong>Direct from the developer.</strong>
+                        <p>No handoff layer. Product decisions, implementation details, support context, and release tradeoffs all stay close to the code.</p>
                     </div>
                 </div>
             </div>

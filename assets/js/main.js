@@ -29,7 +29,7 @@ function renderFeatured() {
         <article class="showcase" style="--app-accent: ${accent}">
             <div class="showcase-inner">
                 <div class="showcase-content">
-                    <span class="eyebrow">Featured App</span>
+                    <span class="eyebrow">Featured Build</span>
                     <div class="showcase-app-header">
                         <img src="${app.icon}" alt="${app.name} icon" class="showcase-icon">
                         <div>
@@ -42,8 +42,8 @@ function renderFeatured() {
                         ${app.bullets.map(bullet => `<li>${bullet}</li>`).join('')}
                     </ul>
                     <div class="showcase-ctas">
-                        <a href="${app.appStoreUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open App Store</a>
-                        <a href="#contact" class="btn btn-secondary">Ask About It</a>
+                        <a href="${app.appStoreUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View on App Store</a>
+                        <a href="#expertise" class="btn btn-secondary">See Build Approach</a>
                     </div>
                 </div>
                 <div class="showcase-visual">
@@ -420,7 +420,11 @@ function animateStat(el) {
 function initPressFeedback() {
     document.querySelectorAll('.btn, .social-link, .theme-toggle, .nav-hamburger').forEach(control => {
         control.addEventListener('pointerdown', () => control.classList.add('is-pressing'));
-        ['pointerup', 'pointercancel', 'pointerleave', 'blur'].forEach(eventName => {
+        control.addEventListener('pointerup', () => {
+            control.classList.remove('is-pressing');
+            control.blur();
+        });
+        ['pointercancel', 'pointerleave', 'blur'].forEach(eventName => {
             control.addEventListener(eventName, () => control.classList.remove('is-pressing'));
         });
     });
