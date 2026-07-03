@@ -1,230 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Russell Ong is an iOS app developer building polished Swift and SwiftUI apps from product concept to App Store release.">
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Russell Ong is an iOS app developer building polished Swift and SwiftUI apps from product concept to App Store release." />
     <title>Russell Ong - iOS App Developer</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="icon" href="assets/treasure-life-logo.webp" type="image/webp">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap"
+      rel="stylesheet" />
+    <link rel="icon" href="/assets/treasure-life-logo.webp" type="image/webp" />
     <script>
-        (() => {
-            try {
-                const saved = localStorage.getItem('theme');
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (saved === 'dark' || (!saved && prefersDark)) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                }
-            } catch (error) {
-                document.documentElement.removeAttribute('data-theme');
-            }
-        })();
+      // Match the stored theme before first paint to avoid a light flash.
+      try {
+        const saved = localStorage.getItem('theme');
+        const dark =
+          saved === 'dark' ||
+          (!saved && matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) document.documentElement.style.backgroundColor = '#12140e';
+      } catch {}
     </script>
-    <link rel="stylesheet" href="assets/css/custom.css">
-
-    <script src="assets/js/data.js" defer></script>
-    <script src="assets/js/main.js" defer></script>
-</head>
-<body>
-    <a class="skip-link" href="#main">Skip to content</a>
-
-    <nav class="nav" id="main-nav" aria-label="Primary navigation">
-        <div class="nav-inner">
-            <a href="#top" class="nav-logo" aria-label="Russell Ong home">
-                <span class="nav-logo-mark" aria-hidden="true">RO</span>
-                <span>russellry</span>
-            </a>
-
-            <div class="nav-links" id="nav-links">
-                <a href="#work">Apps</a>
-                <a href="#expertise">Expertise</a>
-                <a href="#contact">Contact</a>
-            </div>
-
-            <div class="nav-actions">
-                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle color theme" type="button">
-                    <svg id="theme-icon-moon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg id="theme-icon-sun" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style="display:none;"><circle cx="12" cy="12" r="5" stroke-width="2"></circle><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
-                </button>
-                <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <main id="main">
-        <section class="hero" id="top">
-            <div class="hero-media" aria-hidden="true">
-                <img class="hero-shot" src="assets/treasure-life-screenshot-1.webp" alt="">
-                <img class="hero-shot" src="assets/persona-screenshot-1.webp" alt="">
-                <img class="hero-shot" src="assets/contactsweeper-screenshot-1.webp" alt="">
-                <img class="hero-shot" src="assets/riskm-screenshot-1.webp" alt="">
-                <img class="hero-shot" src="assets/tomorrow-screenshot-1.webp" alt="">
-            </div>
-
-            <div class="container hero-inner reveal">
-                <div class="hero-copy">
-                    <span class="eyebrow">iOS App Developer</span>
-                    <h1 class="hero-title">Russell Ong</h1>
-                    <p class="hero-subtitle">
-                        I build native iPhone and iPad apps end to end: product scope, SwiftUI interfaces, local-first architecture, App Store release, and ongoing support.
-                    </p>
-                    <div class="hero-actions" aria-label="Primary actions">
-                        <a href="#work" class="btn btn-primary">View Apps</a>
-                        <a href="#expertise" class="btn btn-secondary">See Expertise</a>
-                    </div>
-                    <div class="hero-meta" aria-label="Studio highlights">
-                        <span>Swift and SwiftUI</span>
-                        <span>App Store shipping</span>
-                        <span>Privacy-first architecture</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="studio-strip" aria-label="Portfolio summary">
-            <div class="container studio-strip-grid">
-                <div class="studio-strip-item">
-                    <strong>5</strong>
-                    <span>Published App Store apps across productivity, memory, finance, personality, and contacts.</span>
-                </div>
-                <div class="studio-strip-item">
-                    <strong>Native</strong>
-                    <span>Swift and SwiftUI interfaces designed around Apple platform behavior.</span>
-                </div>
-                <div class="studio-strip-item">
-                    <strong>End-to-end</strong>
-                    <span>Product decisions, implementation, release, support, and iteration handled directly.</span>
-                </div>
-            </div>
-        </section>
-
-        <section id="work" class="section">
-            <div class="container">
-                <div class="section-header split reveal">
-                    <div>
-                        <span class="eyebrow">Released Work</span>
-                        <h2 class="section-title">Apps shipped, maintained, and improved over time.</h2>
-                    </div>
-                    <p class="section-kicker">
-                        My portfolio shows the parts that matter in real app development: focused scope, fast native screens, low-permission data handling, and enough polish for people to keep using the product.
-                    </p>
-                </div>
-
-                <div id="featured-container" class="reveal delay-1"></div>
-            </div>
-        </section>
-
-        <section class="section tight">
-            <div class="container">
-                <div class="section-header split reveal">
-                    <div>
-                        <span class="eyebrow">Portfolio</span>
-                        <h2 class="section-title">Current App Store projects.</h2>
-                    </div>
-                    <p class="section-kicker">
-                        Each app is a complete product, not a mockup: real users, store listings, screenshots, support, and ongoing maintenance.
-                    </p>
-                </div>
-
-                <div id="app-grid" class="app-grid"></div>
-
-                <div class="text-center section-action reveal delay-2">
-                    <a href="https://apps.apple.com/us/developer/russell-ong/id1533441487" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-                        View Developer Page
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="expertise" class="section">
-            <div class="container">
-                <div class="about-grid">
-                    <div class="about-copy reveal">
-                        <span class="eyebrow">Expertise</span>
-                        <h2 class="section-title">Native app development with product judgment.</h2>
-                        <p>
-                            I work across the full iOS product loop: defining the narrow job, building the SwiftUI interface, choosing the data model, polishing interactions, preparing App Store assets, and supporting users after release.
-                        </p>
-                        <p>
-                            My strongest work is in practical apps where execution quality matters: clear information hierarchy, reliable local state, accessible controls, and privacy decisions that are reflected in the architecture.
-                        </p>
-                        <div class="about-values">
-                            <span class="value-tag">Native Swift</span>
-                            <span class="value-tag">SwiftUI</span>
-                            <span class="value-tag">Local data</span>
-                            <span class="value-tag">App Store release</span>
-                            <span class="value-tag">Accessibility</span>
-                        </div>
-                    </div>
-
-                    <ul class="principle-list reveal delay-2" aria-label="Development principles">
-                        <li>
-                            <span class="principle-number">1</span>
-                            <p><strong>Scope before code.</strong> Strong apps start with a clear job, a tight workflow, and fewer features competing for attention.</p>
-                        </li>
-                        <li>
-                            <span class="principle-number">2</span>
-                            <p><strong>Build native where it counts.</strong> Navigation, state, gestures, typography, and system affordances should feel at home on iOS.</p>
-                        </li>
-                        <li>
-                            <span class="principle-number">3</span>
-                            <p><strong>Ship and maintain.</strong> Release quality includes App Store readiness, support paths, privacy clarity, and iteration after launch.</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="section">
-            <div class="container">
-                <div class="contact-panel reveal">
-                    <div class="contact-copy">
-                        <span class="eyebrow">Contact</span>
-                        <h2 class="section-title">App work, support, or technical conversations.</h2>
-                        <p>
-                            Reach out about iOS app development, product feedback, support questions, or a specific App Store project.
-                        </p>
-                        <div class="contact-actions">
-                            <a href="mailto:russellongdev@gmail.com" class="btn btn-primary">Email Russell</a>
-                            <a href="support.html" class="btn btn-secondary">Support Page</a>
-                        </div>
-                        <div class="social-links" aria-label="Social links">
-                            <a href="mailto:russellongdev@gmail.com" class="social-link" aria-label="Email Russell">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            </a>
-                            <a href="https://linkedin.com/in/russellry" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn profile">
-                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg>
-                            </a>
-                            <a href="https://apps.apple.com/us/developer/russell-ong/id1533441487" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Russell Ong on the App Store">
-                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"></path></svg>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="contact-note">
-                        <strong>Direct from the developer.</strong>
-                        <p>No handoff layer. Product decisions, implementation details, support context, and release tradeoffs all stay close to the code.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container footer-inner">
-            <p>&copy; <span id="year"></span> Russell Ong. Built for the App Store.</p>
-            <div class="footer-links">
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="support.html">Support</a>
-            </div>
-        </div>
-    </footer>
-</body>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main-index.tsx"></script>
+  </body>
 </html>

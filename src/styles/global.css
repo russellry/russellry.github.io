@@ -1,0 +1,167 @@
+@import '@astryxdesign/core/reset.css';
+@import '@astryxdesign/core/astryx.css';
+@import '@astryxdesign/theme-matcha/theme.css';
+
+/* Brand override: keep the site's editorial Fraunces headings on the matcha palette. */
+[data-astryx-theme='matcha'] {
+  --font-family-heading: 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+
+/*
+ * matcha theme.css re-declares `:root{color-scheme:light dark}` in a later
+ * cascade layer, which defeats reset.css's html[data-theme] mode mapping and
+ * pins the page to the OS scheme. These unlayered rules restore the toggle.
+ */
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--color-background-body);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-body);
+}
+
+.container {
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-5);
+  box-sizing: border-box;
+}
+
+.container-narrow {
+  max-width: 780px;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-background-surface);
+}
+
+.desktop-nav {
+  display: contents;
+}
+
+.mobile-nav-toggle {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-nav-toggle {
+    display: block;
+  }
+}
+
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--spacing-8);
+  height: var(--spacing-8);
+  border-radius: var(--radius-element);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-family-heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: var(--spacing-10);
+  align-items: center;
+  padding-block: var(--spacing-12);
+}
+
+@media (max-width: 860px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: var(--spacing-8);
+  }
+}
+
+.hero-collage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-block: var(--spacing-6);
+}
+
+.hero-collage img {
+  width: clamp(120px, 16vw, 190px);
+  border-radius: var(--radius-container);
+  border: 1px solid var(--color-border-emphasized);
+  box-shadow: var(--shadow-high);
+  background: var(--color-background-surface);
+}
+
+.hero-collage img:nth-child(1) {
+  transform: rotate(-8deg) translateY(var(--spacing-4));
+}
+
+.hero-collage img:nth-child(2) {
+  z-index: 1;
+  transform: translateY(calc(var(--spacing-3) * -1));
+}
+
+.hero-collage img:nth-child(3) {
+  transform: rotate(8deg) translateY(var(--spacing-4));
+}
+
+.shot-img {
+  display: block;
+  width: 200px;
+  border-radius: var(--radius-element);
+  border: 1px solid var(--color-border);
+}
+
+.card-cover {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: var(--radius-element);
+  border: 1px solid var(--color-border);
+}
+
+.app-icon {
+  display: block;
+  width: var(--spacing-12);
+  height: var(--spacing-12);
+  border-radius: var(--radius-element);
+  border: 1px solid var(--color-border);
+}
+
+/* Long-form article bullets (privacy/support prose). */
+.bullet-list {
+  margin: 0;
+  padding-inline-start: var(--spacing-6);
+  display: grid;
+  gap: var(--spacing-2);
+  list-style: disc;
+}
+
+.bullet-list li::marker {
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
