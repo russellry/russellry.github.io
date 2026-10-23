@@ -30,7 +30,7 @@ export function PrivacyPage() {
       eyebrow="Privacy"
       title="Privacy Policy for Russell Ong apps."
       kicker="A consolidated policy covering current and future mobile applications published by Russell Ong."
-      meta={['Last Updated: May 14, 2026', 'All Russell Ong apps']}>
+      meta={['Last Updated: October 23, 2026', 'All Russell Ong apps']}>
       <ContentSection title="Introduction">
         <Paragraph>
           This Privacy Policy applies to all current and future mobile
@@ -290,6 +290,48 @@ export function PrivacyPage() {
               app data from inside the app. Deleting the app also removes its
               local app container data from the device, subject to normal iOS
               behavior.
+            </>,
+          ]}
+        />
+      </ContentSection>
+
+      <ContentSection title="Treasure Life: Data Handling">
+        <Bullets
+          items={[
+            <>
+              <Strong>Data you enter:</Strong> Treasure Life stores your birth
+              date, planning age, optional display name, and appearance
+              settings. This data stays on your device in the app's shared
+              storage, so the app, its widgets, and your paired Apple Watch can
+              show your timeline. It is not sent to me or to any server.
+            </>,
+            <>
+              <Strong>No account:</Strong> Treasure Life has no sign-in and no
+              account. I do not receive your birth date, name, or settings.
+            </>,
+            <>
+              <Strong>Advertising:</Strong> The free version shows Google AdMob
+              banner ads. Treasure Life requests non-personalized ads only and
+              does not show Apple's App Tracking Transparency prompt, so it does
+              not give Google the device advertising identifier. Google may
+              still collect a device identifier, approximate location from your
+              IP address, ad interaction data, and diagnostic data to serve and
+              measure ads. Premium removes ads.
+            </>,
+            <>
+              <Strong>Purchases:</Strong> Treasure Life uses RevenueCat to
+              manage Premium purchases and restores. RevenueCat receives an
+              anonymous app user identifier and purchase information from
+              Apple. It does not receive your birth date, name, or settings.
+            </>,
+            <>
+              <Strong>Third-party protection:</Strong> Google AdMob and
+              RevenueCat provide their own privacy protections for the limited
+              advertising, purchase, device, and diagnostic data they process.
+            </>,
+            <>
+              <Strong>Data deletion:</Strong> Deleting Treasure Life removes
+              its data from your device and its widgets.
             </>,
           ]}
         />
