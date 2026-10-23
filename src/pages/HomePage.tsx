@@ -105,7 +105,7 @@ function StudioStrip() {
   const items = [
     {
       stat: '5',
-      copy: 'Published App Store apps across productivity, memory, finance, personality, and contacts.',
+      copy: 'Published App Store apps across productivity, life tracking, finance, personality, and contacts.',
     },
     {
       stat: 'Native',
