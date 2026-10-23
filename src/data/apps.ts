@@ -15,21 +15,21 @@ export const APPS: App[] = [
   {
     slug: 'treasure-life',
     name: 'Treasure Life',
-    tagline: 'Life & Memories',
+    tagline: 'Life Countdown',
     bullets: [
-      'Structured memory capture',
-      'Photo-led organization',
-      'Local-first privacy model',
+      'Your life as a dot timeline',
+      'Home and Lock Screen widgets',
+      'Apple Watch and iPhone Duo',
     ],
     description:
-      'A memory app built around calm capture flows, readable detail screens, and private organization for personal moments.',
+      'A calm countdown that turns your life, this year, this month, this week, and today into dots you can see at a glance. Your birth date stays on your device.',
     icon: '/assets/treasure-life-logo.webp',
     screenshots: [
       '/assets/treasure-life-screenshot-1.webp',
       '/assets/treasure-life-screenshot-2.webp',
       '/assets/treasure-life-screenshot-3.webp',
     ],
-    platforms: ['iOS', 'iPadOS'],
+    platforms: ['iOS', 'iPadOS', 'watchOS'],
     appStoreUrl: 'https://apps.apple.com/us/app/treasure-life/id6741671694',
     featured: true,
   },
